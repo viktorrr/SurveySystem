@@ -2,6 +2,7 @@
 {
     using System.Data.Entity;
     using System.Reflection;
+    using System.Web;
     using System.Web.Mvc;
 
     using Autofac;
@@ -12,7 +13,13 @@
     using Data;
     using Data.Common;
 
+    using Microsoft.AspNet.Identity.EntityFramework;
+    using Microsoft.AspNet.Identity.Owin;
+    using Microsoft.Owin.Security;
+
     using Services.Web;
+
+    using SurveySystem.Data.Models;
 
     public static class AutofacConfig
     {
@@ -46,9 +53,19 @@
 
         private static void RegisterServices(ContainerBuilder builder)
         {
-            builder.Register(x => new ApplicationDbContext())
-                .As<DbContext>()
-                .InstancePerRequest();
+            // Configure the db context, user manager and signin manager to use a single instance per request
+            builder.RegisterType<ApplicationDbContext>().AsSelf().InstancePerRequest();
+            builder.Register(c => c.Resolve<ApplicationDbContext>()).As<DbContext>().InstancePerRequest();
+
+            builder.RegisterType<ApplicationUserManager>().AsSelf().InstancePerRequest();
+            builder.RegisterType<ApplicationSignInManager>().AsSelf().InstancePerRequest();
+            builder.Register(c => new UserStore<ApplicationUser>(c.Resolve<DbContext>())).AsImplementedInterfaces().InstancePerRequest();
+            builder.Register(c => HttpContext.Current.GetOwinContext().Authentication).As<IAuthenticationManager>();
+            builder.Register(c => new IdentityFactoryOptions<ApplicationUserManager>
+            {
+                DataProtectionProvider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("Application​")
+            });
+
             builder.Register(x => new HttpCacheService())
                 .As<ICacheService>()
                 .InstancePerRequest();
