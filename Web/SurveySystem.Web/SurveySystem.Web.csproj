@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\..\packages\Microsoft.Net.Compilers.1.1.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -25,6 +26,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -203,6 +205,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="App_Start\GlimpseSecurityPolicy.cs" />
+    <Compile Include="Controllers\SurveyController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -221,6 +224,7 @@
     <Compile Include="Models\Manage\IndexViewModel.cs" />
     <Compile Include="Models\Manage\ManageLoginsViewModel.cs" />
     <Compile Include="Models\Manage\ConfigureTwoFactorViewModel.cs" />
+    <Compile Include="Models\Survey\NewSurveyRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\Manage\SetPasswordViewModel.cs" />
@@ -543,7 +547,352 @@
     <Content Include="node_modules\jquery-validation\LICENSE.md" />
     <Content Include="node_modules\jquery-validation\package.json" />
     <Content Include="node_modules\jquery-validation\README.md" />
+    <Content Include="node_modules\moment\ender.js" />
+    <Content Include="node_modules\moment\locale\af.js" />
+    <Content Include="node_modules\moment\locale\ar-dz.js" />
+    <Content Include="node_modules\moment\locale\ar-kw.js" />
+    <Content Include="node_modules\moment\locale\ar-ly.js" />
+    <Content Include="node_modules\moment\locale\ar-ma.js" />
+    <Content Include="node_modules\moment\locale\ar-sa.js" />
+    <Content Include="node_modules\moment\locale\ar-tn.js" />
+    <Content Include="node_modules\moment\locale\ar.js" />
+    <Content Include="node_modules\moment\locale\az.js" />
+    <Content Include="node_modules\moment\locale\be.js" />
+    <Content Include="node_modules\moment\locale\bg.js" />
+    <Content Include="node_modules\moment\locale\bn.js" />
+    <Content Include="node_modules\moment\locale\bo.js" />
+    <Content Include="node_modules\moment\locale\br.js" />
+    <Content Include="node_modules\moment\locale\bs.js" />
+    <Content Include="node_modules\moment\locale\ca.js" />
+    <Content Include="node_modules\moment\locale\cs.js" />
+    <Content Include="node_modules\moment\locale\cv.js" />
+    <Content Include="node_modules\moment\locale\cy.js" />
+    <Content Include="node_modules\moment\locale\da.js" />
+    <Content Include="node_modules\moment\locale\de-at.js" />
+    <Content Include="node_modules\moment\locale\de-ch.js" />
+    <Content Include="node_modules\moment\locale\de.js" />
+    <Content Include="node_modules\moment\locale\dv.js" />
+    <Content Include="node_modules\moment\locale\el.js" />
+    <Content Include="node_modules\moment\locale\en-au.js" />
+    <Content Include="node_modules\moment\locale\en-ca.js" />
+    <Content Include="node_modules\moment\locale\en-gb.js" />
+    <Content Include="node_modules\moment\locale\en-ie.js" />
+    <Content Include="node_modules\moment\locale\en-nz.js" />
+    <Content Include="node_modules\moment\locale\eo.js" />
+    <Content Include="node_modules\moment\locale\es-do.js" />
+    <Content Include="node_modules\moment\locale\es.js" />
+    <Content Include="node_modules\moment\locale\et.js" />
+    <Content Include="node_modules\moment\locale\eu.js" />
+    <Content Include="node_modules\moment\locale\fa.js" />
+    <Content Include="node_modules\moment\locale\fi.js" />
+    <Content Include="node_modules\moment\locale\fo.js" />
+    <Content Include="node_modules\moment\locale\fr-ca.js" />
+    <Content Include="node_modules\moment\locale\fr-ch.js" />
+    <Content Include="node_modules\moment\locale\fr.js" />
+    <Content Include="node_modules\moment\locale\fy.js" />
+    <Content Include="node_modules\moment\locale\gd.js" />
+    <Content Include="node_modules\moment\locale\gl.js" />
+    <Content Include="node_modules\moment\locale\gom-latn.js" />
+    <Content Include="node_modules\moment\locale\he.js" />
+    <Content Include="node_modules\moment\locale\hi.js" />
+    <Content Include="node_modules\moment\locale\hr.js" />
+    <Content Include="node_modules\moment\locale\hu.js" />
+    <Content Include="node_modules\moment\locale\hy-am.js" />
+    <Content Include="node_modules\moment\locale\id.js" />
+    <Content Include="node_modules\moment\locale\is.js" />
+    <Content Include="node_modules\moment\locale\it.js" />
+    <Content Include="node_modules\moment\locale\ja.js" />
+    <Content Include="node_modules\moment\locale\jv.js" />
+    <Content Include="node_modules\moment\locale\ka.js" />
+    <Content Include="node_modules\moment\locale\kk.js" />
+    <Content Include="node_modules\moment\locale\km.js" />
+    <Content Include="node_modules\moment\locale\kn.js" />
+    <Content Include="node_modules\moment\locale\ko.js" />
+    <Content Include="node_modules\moment\locale\ky.js" />
+    <Content Include="node_modules\moment\locale\lb.js" />
+    <Content Include="node_modules\moment\locale\lo.js" />
+    <Content Include="node_modules\moment\locale\lt.js" />
+    <Content Include="node_modules\moment\locale\lv.js" />
+    <Content Include="node_modules\moment\locale\me.js" />
+    <Content Include="node_modules\moment\locale\mi.js" />
+    <Content Include="node_modules\moment\locale\mk.js" />
+    <Content Include="node_modules\moment\locale\ml.js" />
+    <Content Include="node_modules\moment\locale\mr.js" />
+    <Content Include="node_modules\moment\locale\ms-my.js" />
+    <Content Include="node_modules\moment\locale\ms.js" />
+    <Content Include="node_modules\moment\locale\my.js" />
+    <Content Include="node_modules\moment\locale\nb.js" />
+    <Content Include="node_modules\moment\locale\ne.js" />
+    <Content Include="node_modules\moment\locale\nl-be.js" />
+    <Content Include="node_modules\moment\locale\nl.js" />
+    <Content Include="node_modules\moment\locale\nn.js" />
+    <Content Include="node_modules\moment\locale\pa-in.js" />
+    <Content Include="node_modules\moment\locale\pl.js" />
+    <Content Include="node_modules\moment\locale\pt-br.js" />
+    <Content Include="node_modules\moment\locale\pt.js" />
+    <Content Include="node_modules\moment\locale\ro.js" />
+    <Content Include="node_modules\moment\locale\ru.js" />
+    <Content Include="node_modules\moment\locale\sd.js" />
+    <Content Include="node_modules\moment\locale\se.js" />
+    <Content Include="node_modules\moment\locale\si.js" />
+    <Content Include="node_modules\moment\locale\sk.js" />
+    <Content Include="node_modules\moment\locale\sl.js" />
+    <Content Include="node_modules\moment\locale\sq.js" />
+    <Content Include="node_modules\moment\locale\sr-cyrl.js" />
+    <Content Include="node_modules\moment\locale\sr.js" />
+    <Content Include="node_modules\moment\locale\ss.js" />
+    <Content Include="node_modules\moment\locale\sv.js" />
+    <Content Include="node_modules\moment\locale\sw.js" />
+    <Content Include="node_modules\moment\locale\ta.js" />
+    <Content Include="node_modules\moment\locale\te.js" />
+    <Content Include="node_modules\moment\locale\tet.js" />
+    <Content Include="node_modules\moment\locale\th.js" />
+    <Content Include="node_modules\moment\locale\tl-ph.js" />
+    <Content Include="node_modules\moment\locale\tlh.js" />
+    <Content Include="node_modules\moment\locale\tr.js" />
+    <Content Include="node_modules\moment\locale\tzl.js" />
+    <Content Include="node_modules\moment\locale\tzm-latn.js" />
+    <Content Include="node_modules\moment\locale\tzm.js" />
+    <Content Include="node_modules\moment\locale\uk.js" />
+    <Content Include="node_modules\moment\locale\ur.js" />
+    <Content Include="node_modules\moment\locale\uz-latn.js" />
+    <Content Include="node_modules\moment\locale\uz.js" />
+    <Content Include="node_modules\moment\locale\vi.js" />
+    <Content Include="node_modules\moment\locale\x-pseudo.js" />
+    <Content Include="node_modules\moment\locale\yo.js" />
+    <Content Include="node_modules\moment\locale\zh-cn.js" />
+    <Content Include="node_modules\moment\locale\zh-hk.js" />
+    <Content Include="node_modules\moment\locale\zh-tw.js" />
+    <Content Include="node_modules\moment\min\locales.js" />
+    <Content Include="node_modules\moment\min\locales.min.js" />
+    <Content Include="node_modules\moment\min\moment-with-locales.js" />
+    <Content Include="node_modules\moment\min\moment-with-locales.min.js" />
+    <Content Include="node_modules\moment\min\moment.min.js" />
+    <Content Include="node_modules\moment\moment.js" />
+    <Content Include="node_modules\moment\package.js" />
+    <Content Include="node_modules\moment\src\lib\create\check-overflow.js" />
+    <Content Include="node_modules\moment\src\lib\create\date-from-array.js" />
+    <Content Include="node_modules\moment\src\lib\create\from-anything.js" />
+    <Content Include="node_modules\moment\src\lib\create\from-array.js" />
+    <Content Include="node_modules\moment\src\lib\create\from-object.js" />
+    <Content Include="node_modules\moment\src\lib\create\from-string-and-array.js" />
+    <Content Include="node_modules\moment\src\lib\create\from-string-and-format.js" />
+    <Content Include="node_modules\moment\src\lib\create\from-string.js" />
+    <Content Include="node_modules\moment\src\lib\create\local.js" />
+    <Content Include="node_modules\moment\src\lib\create\parsing-flags.js" />
+    <Content Include="node_modules\moment\src\lib\create\utc.js" />
+    <Content Include="node_modules\moment\src\lib\create\valid.js" />
+    <Content Include="node_modules\moment\src\lib\duration\abs.js" />
+    <Content Include="node_modules\moment\src\lib\duration\add-subtract.js" />
+    <Content Include="node_modules\moment\src\lib\duration\as.js" />
+    <Content Include="node_modules\moment\src\lib\duration\bubble.js" />
+    <Content Include="node_modules\moment\src\lib\duration\constructor.js" />
+    <Content Include="node_modules\moment\src\lib\duration\create.js" />
+    <Content Include="node_modules\moment\src\lib\duration\duration.js" />
+    <Content Include="node_modules\moment\src\lib\duration\get.js" />
+    <Content Include="node_modules\moment\src\lib\duration\humanize.js" />
+    <Content Include="node_modules\moment\src\lib\duration\iso-string.js" />
+    <Content Include="node_modules\moment\src\lib\duration\prototype.js" />
+    <Content Include="node_modules\moment\src\lib\duration\valid.js" />
+    <Content Include="node_modules\moment\src\lib\format\format.js" />
+    <Content Include="node_modules\moment\src\lib\locale\base-config.js" />
+    <Content Include="node_modules\moment\src\lib\locale\calendar.js" />
+    <Content Include="node_modules\moment\src\lib\locale\constructor.js" />
+    <Content Include="node_modules\moment\src\lib\locale\en.js" />
+    <Content Include="node_modules\moment\src\lib\locale\formats.js" />
+    <Content Include="node_modules\moment\src\lib\locale\invalid.js" />
+    <Content Include="node_modules\moment\src\lib\locale\lists.js" />
+    <Content Include="node_modules\moment\src\lib\locale\locale.js" />
+    <Content Include="node_modules\moment\src\lib\locale\locales.js" />
+    <Content Include="node_modules\moment\src\lib\locale\ordinal.js" />
+    <Content Include="node_modules\moment\src\lib\locale\pre-post-format.js" />
+    <Content Include="node_modules\moment\src\lib\locale\prototype.js" />
+    <Content Include="node_modules\moment\src\lib\locale\relative.js" />
+    <Content Include="node_modules\moment\src\lib\locale\set.js" />
+    <Content Include="node_modules\moment\src\lib\moment\add-subtract.js" />
+    <Content Include="node_modules\moment\src\lib\moment\calendar.js" />
+    <Content Include="node_modules\moment\src\lib\moment\clone.js" />
+    <Content Include="node_modules\moment\src\lib\moment\compare.js" />
+    <Content Include="node_modules\moment\src\lib\moment\constructor.js" />
+    <Content Include="node_modules\moment\src\lib\moment\creation-data.js" />
+    <Content Include="node_modules\moment\src\lib\moment\diff.js" />
+    <Content Include="node_modules\moment\src\lib\moment\format.js" />
+    <Content Include="node_modules\moment\src\lib\moment\from.js" />
+    <Content Include="node_modules\moment\src\lib\moment\get-set.js" />
+    <Content Include="node_modules\moment\src\lib\moment\locale.js" />
+    <Content Include="node_modules\moment\src\lib\moment\min-max.js" />
+    <Content Include="node_modules\moment\src\lib\moment\moment.js" />
+    <Content Include="node_modules\moment\src\lib\moment\now.js" />
+    <Content Include="node_modules\moment\src\lib\moment\prototype.js" />
+    <Content Include="node_modules\moment\src\lib\moment\start-end-of.js" />
+    <Content Include="node_modules\moment\src\lib\moment\to-type.js" />
+    <Content Include="node_modules\moment\src\lib\moment\to.js" />
+    <Content Include="node_modules\moment\src\lib\moment\valid.js" />
+    <Content Include="node_modules\moment\src\lib\parse\regex.js" />
+    <Content Include="node_modules\moment\src\lib\parse\token.js" />
+    <Content Include="node_modules\moment\src\lib\units\aliases.js" />
+    <Content Include="node_modules\moment\src\lib\units\constants.js" />
+    <Content Include="node_modules\moment\src\lib\units\day-of-month.js" />
+    <Content Include="node_modules\moment\src\lib\units\day-of-week.js" />
+    <Content Include="node_modules\moment\src\lib\units\day-of-year.js" />
+    <Content Include="node_modules\moment\src\lib\units\hour.js" />
+    <Content Include="node_modules\moment\src\lib\units\millisecond.js" />
+    <Content Include="node_modules\moment\src\lib\units\minute.js" />
+    <Content Include="node_modules\moment\src\lib\units\month.js" />
+    <Content Include="node_modules\moment\src\lib\units\offset.js" />
+    <Content Include="node_modules\moment\src\lib\units\priorities.js" />
+    <Content Include="node_modules\moment\src\lib\units\quarter.js" />
+    <Content Include="node_modules\moment\src\lib\units\second.js" />
+    <Content Include="node_modules\moment\src\lib\units\timestamp.js" />
+    <Content Include="node_modules\moment\src\lib\units\timezone.js" />
+    <Content Include="node_modules\moment\src\lib\units\units.js" />
+    <Content Include="node_modules\moment\src\lib\units\week-calendar-utils.js" />
+    <Content Include="node_modules\moment\src\lib\units\week-year.js" />
+    <Content Include="node_modules\moment\src\lib\units\week.js" />
+    <Content Include="node_modules\moment\src\lib\units\year.js" />
+    <Content Include="node_modules\moment\src\lib\utils\abs-ceil.js" />
+    <Content Include="node_modules\moment\src\lib\utils\abs-floor.js" />
+    <Content Include="node_modules\moment\src\lib\utils\abs-round.js" />
+    <Content Include="node_modules\moment\src\lib\utils\compare-arrays.js" />
+    <Content Include="node_modules\moment\src\lib\utils\defaults.js" />
+    <Content Include="node_modules\moment\src\lib\utils\deprecate.js" />
+    <Content Include="node_modules\moment\src\lib\utils\extend.js" />
+    <Content Include="node_modules\moment\src\lib\utils\has-own-prop.js" />
+    <Content Include="node_modules\moment\src\lib\utils\hooks.js" />
+    <Content Include="node_modules\moment\src\lib\utils\index-of.js" />
+    <Content Include="node_modules\moment\src\lib\utils\is-array.js" />
+    <Content Include="node_modules\moment\src\lib\utils\is-date.js" />
+    <Content Include="node_modules\moment\src\lib\utils\is-function.js" />
+    <Content Include="node_modules\moment\src\lib\utils\is-number.js" />
+    <Content Include="node_modules\moment\src\lib\utils\is-object-empty.js" />
+    <Content Include="node_modules\moment\src\lib\utils\is-object.js" />
+    <Content Include="node_modules\moment\src\lib\utils\is-undefined.js" />
+    <Content Include="node_modules\moment\src\lib\utils\keys.js" />
+    <Content Include="node_modules\moment\src\lib\utils\map.js" />
+    <Content Include="node_modules\moment\src\lib\utils\some.js" />
+    <Content Include="node_modules\moment\src\lib\utils\to-int.js" />
+    <Content Include="node_modules\moment\src\lib\utils\zero-fill.js" />
+    <Content Include="node_modules\moment\src\locale\af.js" />
+    <Content Include="node_modules\moment\src\locale\ar-dz.js" />
+    <Content Include="node_modules\moment\src\locale\ar-kw.js" />
+    <Content Include="node_modules\moment\src\locale\ar-ly.js" />
+    <Content Include="node_modules\moment\src\locale\ar-ma.js" />
+    <Content Include="node_modules\moment\src\locale\ar-sa.js" />
+    <Content Include="node_modules\moment\src\locale\ar-tn.js" />
+    <Content Include="node_modules\moment\src\locale\ar.js" />
+    <Content Include="node_modules\moment\src\locale\az.js" />
+    <Content Include="node_modules\moment\src\locale\be.js" />
+    <Content Include="node_modules\moment\src\locale\bg.js" />
+    <Content Include="node_modules\moment\src\locale\bn.js" />
+    <Content Include="node_modules\moment\src\locale\bo.js" />
+    <Content Include="node_modules\moment\src\locale\br.js" />
+    <Content Include="node_modules\moment\src\locale\bs.js" />
+    <Content Include="node_modules\moment\src\locale\ca.js" />
+    <Content Include="node_modules\moment\src\locale\cs.js" />
+    <Content Include="node_modules\moment\src\locale\cv.js" />
+    <Content Include="node_modules\moment\src\locale\cy.js" />
+    <Content Include="node_modules\moment\src\locale\da.js" />
+    <Content Include="node_modules\moment\src\locale\de-at.js" />
+    <Content Include="node_modules\moment\src\locale\de-ch.js" />
+    <Content Include="node_modules\moment\src\locale\de.js" />
+    <Content Include="node_modules\moment\src\locale\dv.js" />
+    <Content Include="node_modules\moment\src\locale\el.js" />
+    <Content Include="node_modules\moment\src\locale\en-au.js" />
+    <Content Include="node_modules\moment\src\locale\en-ca.js" />
+    <Content Include="node_modules\moment\src\locale\en-gb.js" />
+    <Content Include="node_modules\moment\src\locale\en-ie.js" />
+    <Content Include="node_modules\moment\src\locale\en-nz.js" />
+    <Content Include="node_modules\moment\src\locale\eo.js" />
+    <Content Include="node_modules\moment\src\locale\es-do.js" />
+    <Content Include="node_modules\moment\src\locale\es.js" />
+    <Content Include="node_modules\moment\src\locale\et.js" />
+    <Content Include="node_modules\moment\src\locale\eu.js" />
+    <Content Include="node_modules\moment\src\locale\fa.js" />
+    <Content Include="node_modules\moment\src\locale\fi.js" />
+    <Content Include="node_modules\moment\src\locale\fo.js" />
+    <Content Include="node_modules\moment\src\locale\fr-ca.js" />
+    <Content Include="node_modules\moment\src\locale\fr-ch.js" />
+    <Content Include="node_modules\moment\src\locale\fr.js" />
+    <Content Include="node_modules\moment\src\locale\fy.js" />
+    <Content Include="node_modules\moment\src\locale\gd.js" />
+    <Content Include="node_modules\moment\src\locale\gl.js" />
+    <Content Include="node_modules\moment\src\locale\gom-latn.js" />
+    <Content Include="node_modules\moment\src\locale\he.js" />
+    <Content Include="node_modules\moment\src\locale\hi.js" />
+    <Content Include="node_modules\moment\src\locale\hr.js" />
+    <Content Include="node_modules\moment\src\locale\hu.js" />
+    <Content Include="node_modules\moment\src\locale\hy-am.js" />
+    <Content Include="node_modules\moment\src\locale\id.js" />
+    <Content Include="node_modules\moment\src\locale\is.js" />
+    <Content Include="node_modules\moment\src\locale\it.js" />
+    <Content Include="node_modules\moment\src\locale\ja.js" />
+    <Content Include="node_modules\moment\src\locale\jv.js" />
+    <Content Include="node_modules\moment\src\locale\ka.js" />
+    <Content Include="node_modules\moment\src\locale\kk.js" />
+    <Content Include="node_modules\moment\src\locale\km.js" />
+    <Content Include="node_modules\moment\src\locale\kn.js" />
+    <Content Include="node_modules\moment\src\locale\ko.js" />
+    <Content Include="node_modules\moment\src\locale\ky.js" />
+    <Content Include="node_modules\moment\src\locale\lb.js" />
+    <Content Include="node_modules\moment\src\locale\lo.js" />
+    <Content Include="node_modules\moment\src\locale\lt.js" />
+    <Content Include="node_modules\moment\src\locale\lv.js" />
+    <Content Include="node_modules\moment\src\locale\me.js" />
+    <Content Include="node_modules\moment\src\locale\mi.js" />
+    <Content Include="node_modules\moment\src\locale\mk.js" />
+    <Content Include="node_modules\moment\src\locale\ml.js" />
+    <Content Include="node_modules\moment\src\locale\mr.js" />
+    <Content Include="node_modules\moment\src\locale\ms-my.js" />
+    <Content Include="node_modules\moment\src\locale\ms.js" />
+    <Content Include="node_modules\moment\src\locale\my.js" />
+    <Content Include="node_modules\moment\src\locale\nb.js" />
+    <Content Include="node_modules\moment\src\locale\ne.js" />
+    <Content Include="node_modules\moment\src\locale\nl-be.js" />
+    <Content Include="node_modules\moment\src\locale\nl.js" />
+    <Content Include="node_modules\moment\src\locale\nn.js" />
+    <Content Include="node_modules\moment\src\locale\pa-in.js" />
+    <Content Include="node_modules\moment\src\locale\pl.js" />
+    <Content Include="node_modules\moment\src\locale\pt-br.js" />
+    <Content Include="node_modules\moment\src\locale\pt.js" />
+    <Content Include="node_modules\moment\src\locale\ro.js" />
+    <Content Include="node_modules\moment\src\locale\ru.js" />
+    <Content Include="node_modules\moment\src\locale\sd.js" />
+    <Content Include="node_modules\moment\src\locale\se.js" />
+    <Content Include="node_modules\moment\src\locale\si.js" />
+    <Content Include="node_modules\moment\src\locale\sk.js" />
+    <Content Include="node_modules\moment\src\locale\sl.js" />
+    <Content Include="node_modules\moment\src\locale\sq.js" />
+    <Content Include="node_modules\moment\src\locale\sr-cyrl.js" />
+    <Content Include="node_modules\moment\src\locale\sr.js" />
+    <Content Include="node_modules\moment\src\locale\ss.js" />
+    <Content Include="node_modules\moment\src\locale\sv.js" />
+    <Content Include="node_modules\moment\src\locale\sw.js" />
+    <Content Include="node_modules\moment\src\locale\ta.js" />
+    <Content Include="node_modules\moment\src\locale\te.js" />
+    <Content Include="node_modules\moment\src\locale\tet.js" />
+    <Content Include="node_modules\moment\src\locale\th.js" />
+    <Content Include="node_modules\moment\src\locale\tl-ph.js" />
+    <Content Include="node_modules\moment\src\locale\tlh.js" />
+    <Content Include="node_modules\moment\src\locale\tr.js" />
+    <Content Include="node_modules\moment\src\locale\tzl.js" />
+    <Content Include="node_modules\moment\src\locale\tzm-latn.js" />
+    <Content Include="node_modules\moment\src\locale\tzm.js" />
+    <Content Include="node_modules\moment\src\locale\uk.js" />
+    <Content Include="node_modules\moment\src\locale\ur.js" />
+    <Content Include="node_modules\moment\src\locale\uz-latn.js" />
+    <Content Include="node_modules\moment\src\locale\uz.js" />
+    <Content Include="node_modules\moment\src\locale\vi.js" />
+    <Content Include="node_modules\moment\src\locale\x-pseudo.js" />
+    <Content Include="node_modules\moment\src\locale\yo.js" />
+    <Content Include="node_modules\moment\src\locale\zh-cn.js" />
+    <Content Include="node_modules\moment\src\locale\zh-hk.js" />
+    <Content Include="node_modules\moment\src\locale\zh-tw.js" />
+    <Content Include="node_modules\moment\src\moment.js" />
     <Content Include="package.json" />
+    <Content Include="node_modules\moment\CHANGELOG.md" />
+    <Content Include="node_modules\moment\LICENSE" />
+    <Content Include="node_modules\moment\package.json" />
+    <Content Include="node_modules\moment\README.md" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
@@ -578,8 +927,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Survey\New.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <TypeScriptCompile Include="node_modules\moment\moment.d.ts" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
@@ -623,11 +975,15 @@
       <Name>SurveySystem.Web.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

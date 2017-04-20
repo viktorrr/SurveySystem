@@ -27,6 +27,12 @@
             bundles
                 .Add(new ScriptBundle("~/bundles/bootstrap")
                 .Include(FormatNodeModulePath("bootstrap/dist/js/bootstrap.min.js")));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/dt-picker")
+                .Include(
+                    FormatNodeModulePath("moment/min/moment-with-locales.min.js"),
+                    FormatNodeModulePath("eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")));
         }
 
         private static void RegisterStyles(BundleCollection bundles)
@@ -37,6 +43,10 @@
                     FormatNodeModulePath("bootstrap/dist/css/bootstrap.min.css"),
                     FormatNodeModulePath("bootstrap/dist/css/bootstrap-theme.min.css"),
                     "~/Content/site.css"));
+
+            bundles
+                .Add(new StyleBundle("~/Content/dt-picker")
+                .Include(FormatNodeModulePath("eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")));
         }
 
         private static string FormatNodeModulePath(string path)

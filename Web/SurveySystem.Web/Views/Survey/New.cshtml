@@ -1,0 +1,96 @@
+﻿@model SurveySystem.Web.Models.Survey.NewSurveyRequest
+
+@{
+    ViewBag.Title = "Нова анкета";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@ViewBag.Title</h2>
+
+        @Html.ValidationSummary(true)
+        @using (Html.BeginForm("New", "Survey", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Title, "Заглавие", new { @class = "control-label col-sm-2" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Title)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.BeginsOn, "Начална дата", new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    <div class='input-group date' id="start-date">
+                        @Html.TextBoxFor(x => x.BeginsOn, new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <p>
+                        @Html.ValidationMessageFor(x => x.BeginsOn)
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.BeginsOn, "Крайна дата", new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    <div class='input-group date' id="end-date">
+                        @Html.TextBoxFor(x => x.EndsOn, new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <p>
+                        @Html.ValidationMessageFor(x => x.EndsOn)
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Anonymous, "Анонимна анкета", new { @class = "control-label col-sm-2" })
+                <div class="col-md-5">
+                    @Html.CheckBoxFor(x => x.Anonymous)
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-5">
+                    <input type="submit" value="Запази" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(document)
+            .ready(function () {
+                var calendarSettings = {
+                    format: 'YYYY-MM-DD',
+                    locale: 'bg',
+                    minDate: moment(moment().utc().add(2, 'h')),
+                    date: null
+                };
+
+                //  prepare the date pickers
+                $('#start-date').datetimepicker(calendarSettings);
+                $('#end-date').datetimepicker(calendarSettings);
+
+
+                @if (!string.IsNullOrEmpty(Model?.Title))
+                {
+                    @:$('#Title').val('@Model.Title');
+                    @:$('.selectpicker').selectpicker('val', '@Model.Title');
+                }
+            });
+    </script>
+}
