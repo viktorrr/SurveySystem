@@ -6,6 +6,6 @@
 
     public class FreeTextQuestion : SingleAnswerQuestion
     {
-        public override SurveyQuestionType QuestionType => SurveyQuestionType.Text;
+        public override SurveyQuestionType QuestionType => SurveyQuestionType.FreeText;
     }
 }

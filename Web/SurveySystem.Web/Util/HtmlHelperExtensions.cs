@@ -15,7 +15,7 @@
                 { "id", string.Empty }
             };
 
-            if (type == SurveyQuestionType.Text)
+            if (type == SurveyQuestionType.FreeText)
             {
                 result["checked"] = "checked";
             }

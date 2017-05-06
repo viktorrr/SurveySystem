@@ -2,7 +2,7 @@
 {
     public enum SurveyQuestionType
     {
-        Text,
+        FreeText,
         Checkbox,
         RadioButton
     }

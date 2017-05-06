@@ -6,7 +6,7 @@
     {
         public SurveyQustionDetails()
         {
-            this.Type = SurveyQuestionType.Text;
+            this.Type = SurveyQuestionType.FreeText;
         }
 
         [Required]

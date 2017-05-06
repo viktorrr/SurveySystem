@@ -14,7 +14,7 @@
         private static readonly Dictionary<SurveyQuestionType, string> QuestionDictionary =
             new Dictionary<SurveyQuestionType, string>
             {
-                { SurveyQuestionType.Text, "Свободен текст" },
+                { SurveyQuestionType.FreeText, "Свободен текст" },
                 { SurveyQuestionType.Checkbox, "Множество отговори(чекбокс)" },
                 { SurveyQuestionType.RadioButton, "Единствен отговор(радио бутон)" },
             };
