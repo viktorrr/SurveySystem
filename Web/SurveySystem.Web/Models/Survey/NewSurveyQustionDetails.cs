@@ -2,9 +2,9 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class SurveyQustionDetails
+    public class NewSurveyQustionDetails
     {
-        public SurveyQustionDetails()
+        public NewSurveyQustionDetails()
         {
             this.Type = SurveyQuestionType.FreeText;
         }

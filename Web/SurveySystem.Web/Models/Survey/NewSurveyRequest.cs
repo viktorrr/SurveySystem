@@ -11,7 +11,7 @@
     {
         public NewSurveyRequest()
         {
-            this.Questions = new List<SurveyQustionDetails>();
+            this.Questions = new List<NewSurveyQustionDetails>();
         }
 
         [Required(ErrorMessage = "Заглавието е задължително.")]
@@ -22,6 +22,6 @@
         [Required(ErrorMessage = "Началната дата е задължителна.")]
         public DateTime BeginsOn { get; set; }
 
-        public IList<SurveyQustionDetails> Questions { get; set; }
+        public IList<NewSurveyQustionDetails> Questions { get; set; }
     }
 }
