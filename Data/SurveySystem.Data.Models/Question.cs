@@ -15,6 +15,9 @@
         }
 
         [Required]
+        public int SequenceNumber { get; set; }
+
+        [Required]
         public string Text { get; set; }
 
         [Required]

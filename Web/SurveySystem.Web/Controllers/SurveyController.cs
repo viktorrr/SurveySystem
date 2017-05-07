@@ -34,15 +34,19 @@
                 Title = request.Title
             };
 
-            foreach (var questionDetails in request.Questions)
+            for (int i = 0; i < request.Questions.Count; i++)
             {
-                var question = new Question { Text = questionDetails.Text, QuestionType = questionDetails.Type };
+                var questionDetails = request.Questions[i];
+                var question = new Question
+                {
+                    Text = questionDetails.Text,
+                    QuestionType = questionDetails.Type,
+                    SequenceNumber = i
+                };
+
                 if (question.QuestionType != QuestionType.FreeText)
                 {
-                    var questionAnswers = questionDetails.Answer.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    var answers = questionAnswers.Select(x => new QuestionAnswer { Question = question, Text = x }).ToList();
-
-                    question.QuestionAnswers = answers;
+                    question.QuestionAnswers = this.CreateQuestionAnswers(question, questionDetails.Answer);
                 }
 
                 survey.Questions.Add(question);
@@ -91,6 +95,15 @@
         public ViewResult Fill(SurveySubmission submission)
         {
             return this.View(submission);
+        }
+
+        private List<QuestionAnswer> CreateQuestionAnswers(Question question, string answers)
+        {
+            var questionAnswers = answers.Split(
+                new[] { Environment.NewLine },
+                StringSplitOptions.RemoveEmptyEntries);
+
+            return questionAnswers.Select(x => new QuestionAnswer { Question = question, Text = x }).ToList();
         }
 
         private IList<BaseSurveyQuestion> GetQuestions()

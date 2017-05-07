@@ -48,34 +48,36 @@
 
             <hr />
 
-            <div id="questions-template">
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Questions[0].Text, "Въпрос", new { @class = "control-label col-sm-2" })
-                    <div class="col-md-5">
-                        @Html.TextBoxFor(x => x.Questions[0].Text, new { @class = "form-control" })
+            <div id="questions-container">
+                <div id="questions-template">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Questions[0].Text, "Въпрос", new { @class = "control-label col-sm-2" })
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.Questions[0].Text, new { @class = "form-control" })
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Questions[0].Type, "Тип на въпроса", new { @class = "control-label col-sm-2" })
-                    <div class="col-sm-10">
-                        @{
-                            var questionTypes = EnumUtil.GetEnumValues<QuestionType>();
-                            foreach (var type in questionTypes)
-                            {
-                                <label class="radio-button-container">
-                                    @Html.RadioButtonFor(x => x.Questions[0].Type, Convert.ToInt32(type), Html.BuildSurveryQuestionProperties(type))
-                                    <span>@EnumUtil.ToString(type)</span>
-                                </label>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Questions[0].Type, "Тип на въпроса", new { @class = "control-label col-sm-2" })
+                        <div class="col-sm-10">
+                            @{
+                                var questionTypes = EnumUtil.GetEnumValues<QuestionType>();
+                                foreach (var type in questionTypes)
+                                {
+                                    <label class="radio-button-container">
+                                        @Html.RadioButtonFor(x => x.Questions[0].Type, Convert.ToInt32(type), Html.BuildSurveryQuestionProperties(type))
+                                        <span>@EnumUtil.ToString(type)</span>
+                                    </label>
+                                }
                             }
-                        }
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Questions[0].Type, "Отговори", new { @class = "control-label col-sm-2" })
-                    <div class="col-sm-5">
-                        @Html.TextAreaFor(x => x.Questions[0].Answer, 5, 1, new { @class = "form-control" })
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Questions[0].Type, "Отговори", new { @class = "control-label col-sm-2" })
+                        <div class="col-sm-5">
+                            @Html.TextAreaFor(x => x.Questions[0].Answer, 5, 1, new { @class = "form-control" })
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,6 +100,7 @@
             .ready(function () {
 
                 initCalendars();
+                initNewQuestionButton();
 
                 function initCalendars() {
                     var calendarSettings = {
@@ -119,6 +122,32 @@
                     {
                         @:$('#Title').val('@Model.Title');
                     }
+                }
+
+                function initNewQuestionButton() {
+                    var $template = $("#questions-template").clone();
+                    var questionsCounter = 0;
+
+                    $('#new-question').click(function () {
+                        var replacementRegex = formatReplacementRegex();
+                        var htmlToAppend = $template.html().replace(/(_|\[)(\d)(_|\])/g, replacementRegex);
+                        var $element = $(htmlToAppend);
+                        $element.hide();
+
+                        $($('#questions-container').children().last()).after($element);
+
+                        // clear values (if any)
+                        $($element.find(':input')[0]).val('');
+                        $($element.find('textarea')[0]).val('');
+                        $($element.find('.radio-button-container input')[0]).prop('checked', true);
+
+                        $element.show();
+
+                        function formatReplacementRegex() {
+                            questionsCounter++;
+                            return '$1' + questionsCounter + '$3';
+                        }
+                    });
                 }
             });
     </script>
