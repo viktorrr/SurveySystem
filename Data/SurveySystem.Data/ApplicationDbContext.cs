@@ -17,6 +17,14 @@
         {
         }
 
+        public IDbSet<Survey> Surveys { get; set; }
+
+        public IDbSet<Question> Questions { get; set; }
+
+        public IDbSet<RespondentAnswer> RespondentAnswers { get; set; }
+
+        public IDbSet<QuestionAnswer> QuestionAnswers { get; set; }
+
         public override int SaveChanges()
         {
             this.ApplyAuditInfoRules();

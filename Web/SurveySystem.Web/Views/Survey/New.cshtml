@@ -1,4 +1,5 @@
-﻿@using SurveySystem.Web.Models.Survey
+﻿@using SurveySystem.Data.Models
+@using SurveySystem.Web.Models.Survey
 @using SurveySystem.Web.Util
 @model SurveySystem.Web.Models.Survey.NewSurveyRequest
 
@@ -39,9 +40,9 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(x => x.Anonymous, "Анонимна анкета", new { @class = "control-label col-sm-2" })
+                @Html.LabelFor(x => x.IsAnonymous, "Анонимна анкета", new { @class = "control-label col-sm-2" })
                 <div class="col-md-5">
-                    @Html.CheckBoxFor(x => x.Anonymous)
+                    @Html.CheckBoxFor(x => x.IsAnonymous)
                 </div>
             </div>
 
@@ -59,7 +60,7 @@
                     @Html.LabelFor(x => x.Questions[0].Type, "Тип на въпроса", new { @class = "control-label col-sm-2" })
                     <div class="col-sm-10">
                         @{
-                            var questionTypes = EnumUtil.GetEnumValues<SurveyQuestionType>();
+                            var questionTypes = EnumUtil.GetEnumValues<QuestionType>();
                             foreach (var type in questionTypes)
                             {
                                 <label class="radio-button-container">

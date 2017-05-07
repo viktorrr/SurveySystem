@@ -17,7 +17,7 @@
         [Required(ErrorMessage = "Заглавието е задължително.")]
         public string Title { get; set; }
 
-        public bool Anonymous { get; set; }
+        public bool IsAnonymous { get; set; }
 
         [Required(ErrorMessage = "Началната дата е задължителна.")]
         public DateTime BeginsOn { get; set; }

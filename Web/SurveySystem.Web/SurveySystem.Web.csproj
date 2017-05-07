@@ -231,7 +231,6 @@
     <Compile Include="Models\Survey\NewSurveyRequest.cs" />
     <Compile Include="Models\Survey\RadioButtonQuestion.cs" />
     <Compile Include="Models\Survey\SingleAnswerQuestion.cs" />
-    <Compile Include="Models\Survey\SurveyQuestionType.cs" />
     <Compile Include="Models\Survey\NewSurveyQustionDetails.cs" />
     <Compile Include="Models\Survey\SurveySubmission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

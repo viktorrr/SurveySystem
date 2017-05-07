@@ -2,14 +2,14 @@
 {
     using System.Data.Entity.Migrations;
 
-    public sealed class Configuration : DbMigrationsConfiguration<SurveySystem.Data.ApplicationDbContext>
+    public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
-            this.AutomaticMigrationsEnabled = false;
+            this.AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(SurveySystem.Data.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
         }
     }

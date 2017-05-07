@@ -3,19 +3,20 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
 
+    using SurveySystem.Data.Models;
     using SurveySystem.Web.Models.Survey;
 
     public static class HtmlHelperExtensions
     {
         public static Dictionary<string, object> BuildSurveryQuestionProperties(
-            this HtmlHelper helper, SurveyQuestionType type)
+            this HtmlHelper helper, QuestionType type)
         {
             var result = new Dictionary<string, object>
             {
                 { "id", string.Empty }
             };
 
-            if (type == SurveyQuestionType.FreeText)
+            if (type == QuestionType.FreeText)
             {
                 result["checked"] = "checked";
             }

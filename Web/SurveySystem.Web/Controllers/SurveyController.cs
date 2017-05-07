@@ -1,13 +1,18 @@
 ﻿namespace SurveySystem.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
 
+    using SurveySystem.Data;
+    using SurveySystem.Data.Models;
     using SurveySystem.Web.Models.Survey;
 
     public class SurveyController : BaseController
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         [HttpGet]
         public ViewResult New()
         {
@@ -21,6 +26,30 @@
             {
                 return this.View(request);
             }
+
+            var survey = new Survey
+            {
+                IsAnonymous = request.IsAnonymous,
+                BeginsOn = request.BeginsOn,
+                Title = request.Title
+            };
+
+            foreach (var questionDetails in request.Questions)
+            {
+                var question = new Question { Text = questionDetails.Text, QuestionType = questionDetails.Type };
+                if (question.QuestionType != QuestionType.FreeText)
+                {
+                    var questionAnswers = questionDetails.Answer.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    var answers = questionAnswers.Select(x => new QuestionAnswer { Question = question, Text = x }).ToList();
+
+                    question.QuestionAnswers = answers;
+                }
+
+                survey.Questions.Add(question);
+            }
+
+            this.db.Surveys.Add(survey);
+            this.db.SaveChanges();
 
             return this.View();
         }

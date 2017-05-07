@@ -2,11 +2,13 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using SurveySystem.Data.Models;
+
     public class NewSurveyQustionDetails
     {
         public NewSurveyQustionDetails()
         {
-            this.Type = SurveyQuestionType.FreeText;
+            this.Type = QuestionType.FreeText;
         }
 
         [Required]
@@ -14,6 +16,6 @@
 
         public string Answer { get; set; }
 
-        public SurveyQuestionType Type { get; set; }
+        public QuestionType Type { get; set; }
     }
 }

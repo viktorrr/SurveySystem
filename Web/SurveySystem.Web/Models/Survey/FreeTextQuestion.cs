@@ -1,11 +1,9 @@
 ﻿namespace SurveySystem.Web.Models.Survey
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using SurveySystem.Data.Models;
 
     public class FreeTextQuestion : SingleAnswerQuestion
     {
-        public override SurveyQuestionType QuestionType => SurveyQuestionType.FreeText;
+        public override QuestionType QuestionType => QuestionType.FreeText;
     }
 }

@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using SurveySystem.Data.Models;
+
     public class SurveySubmission
     {
         private readonly Dictionary<int, FreeTextQuestion> freeTextQuestionsCache;
@@ -16,7 +18,7 @@
 
         public SurveySubmission(
             int surveyId,
-            List<SurveyQuestionType> questionTypes,
+            List<QuestionType> questionTypes,
             IList<FreeTextQuestion> freeTextQuestions,
             IList<RadioButtonQuestion> radioButtonQuestions,
             IList<CheckBoxQuestion> checkBoxQuestions)
@@ -40,7 +42,7 @@
 
         public IList<CheckBoxQuestion> CheckBoxQuestions { get; set; }
 
-        public IList<SurveyQuestionType> QuestionTypes { get; set; }
+        public IList<QuestionType> QuestionTypes { get; set; }
 
         public FreeTextQuestion GetFreeTextQuestion(int number)
         {
