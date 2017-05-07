@@ -59,7 +59,7 @@
         }
 
         [HttpGet]
-        public ViewResult Fill(int id = 1)
+        public ViewResult Submit(int id = 1)
         {
             var i = -1;
             var freeTextQuestions = new List<FreeTextQuestion>
@@ -92,7 +92,7 @@
         }
 
         [HttpPost]
-        public ViewResult Fill(SurveySubmission submission)
+        public ViewResult Submit(SurveySubmission submission)
         {
             return this.View(submission);
         }

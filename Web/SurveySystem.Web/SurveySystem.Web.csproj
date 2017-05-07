@@ -939,7 +939,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Survey\New.cshtml" />
-    <Content Include="Views\Survey\Fill.cshtml" />
+    <Content Include="Views\Survey\Submit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="node_modules\moment\moment.d.ts" />

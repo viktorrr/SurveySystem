@@ -1,5 +1,4 @@
 ﻿@using SurveySystem.Data.Models
-@using SurveySystem.Web.Models.Survey
 @using SurveySystem.Web.Util
 @model SurveySystem.Web.Models.Survey.SurveySubmission
 
@@ -13,7 +12,7 @@
         <h2 class="text-center">@ViewBag.Title</h2>
 
         @Html.ValidationSummary(true)
-        @using (Html.BeginForm("Fill", "Survey", new { id = Model.SurveyId }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Submit", "Survey", new { id = Model.SurveyId }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
