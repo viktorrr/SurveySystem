@@ -18,13 +18,11 @@
 
         public SurveySubmission(
             int surveyId,
-            List<QuestionType> questionTypes,
             IList<FreeTextQuestion> freeTextQuestions,
             IList<RadioButtonQuestion> radioButtonQuestions,
             IList<CheckBoxQuestion> checkBoxQuestions)
         {
             this.SurveyId = surveyId;
-            this.QuestionTypes = questionTypes;
             this.FreeTextQuestions = freeTextQuestions;
             this.RadioButtonQuestions = radioButtonQuestions;
             this.CheckBoxQuestions = checkBoxQuestions;
@@ -32,6 +30,13 @@
             this.freeTextQuestionsCache = this.FreeTextQuestions.ToDictionary(x => x.SequentialNumber, x => x);
             this.radioButtonQuestionsCache = this.RadioButtonQuestions.ToDictionary(x => x.SequentialNumber, x => x);
             this.checkBoxQuestionsCache = this.CheckBoxQuestions.ToDictionary(x => x.SequentialNumber, x => x);
+
+            var surveyQuestions = new List<BaseSurveyQuestion>();
+            surveyQuestions.AddRange(freeTextQuestions);
+            surveyQuestions.AddRange(radioButtonQuestions);
+            surveyQuestions.AddRange(checkBoxQuestions);
+
+            this.QuestionTypes = surveyQuestions.OrderBy(x => x.SequentialNumber).Select(x => x.QuestionType).ToList();
         }
 
         public int SurveyId { get; set; }

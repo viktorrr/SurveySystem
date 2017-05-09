@@ -2,8 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Web.Mvc;
+
+    using AutoMapper.Internal;
 
     using SurveySystem.Data;
     using SurveySystem.Data.Models;
@@ -61,33 +64,7 @@
         [HttpGet]
         public ViewResult Submit(int id = 1)
         {
-            var i = -1;
-            var freeTextQuestions = new List<FreeTextQuestion>
-            {
-                new FreeTextQuestion { SequentialNumber = ++i, Answer = "42", Text = "what's the meaning of life?" },
-                new FreeTextQuestion { SequentialNumber = ++i }
-            };
-
-            var radioButtonQuestions = new List<RadioButtonQuestion>
-            {
-                new RadioButtonQuestion { SequentialNumber = ++i, AvailableAnswers = new List<string> { "R1", "R1" } },
-                new RadioButtonQuestion { SequentialNumber = ++i, AvailableAnswers = new List<string> { "R2", "R22" } },
-            };
-
-            var checkBoxQuestions = new List<CheckBoxQuestion>
-            {
-                new CheckBoxQuestion { SequentialNumber = ++i, Answers = new List<string> { "C1", "C11", "C111" } },
-                new CheckBoxQuestion { SequentialNumber = ++i, Answers = new List<string> { "C222" } }
-            };
-
-            var surveyQuestions = new List<BaseSurveyQuestion>();
-            surveyQuestions.AddRange(freeTextQuestions);
-            surveyQuestions.AddRange(radioButtonQuestions);
-            surveyQuestions.AddRange(checkBoxQuestions);
-
-            var questionTypes = surveyQuestions.Select(x => x.QuestionType).ToList();
-
-            var submission = new SurveySubmission(id, questionTypes, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
+            var submission = this.GetSubmission(id);
             return this.View(submission);
         }
 
@@ -106,33 +83,47 @@
             return questionAnswers.Select(x => new QuestionAnswer { Question = question, Text = x }).ToList();
         }
 
-        private IList<BaseSurveyQuestion> GetQuestions()
+        private SurveySubmission GetSubmission(int id)
         {
-            int i = -1;
-            var freeTextQuestions = new List<FreeTextQuestion>
+            var survey = this.db.Surveys.Include(x => x.Questions).First(x => x.Id == id);
+
+            var result = survey.Questions
+                .GroupBy(x => x.QuestionType, (type, values) => new { Type = type, Questions = values })
+                .ToDictionary(x => x.Type, x => x.Questions);
+
+            var freeTextQuestions = new List<FreeTextQuestion>();
+            var radioButtonQuestions = new List<RadioButtonQuestion>();
+            var checkBoxQuestions = new List<CheckBoxQuestion>();
+
+            if (result.ContainsKey(QuestionType.FreeText))
             {
-                new FreeTextQuestion { SequentialNumber = i++ },
-                new FreeTextQuestion { SequentialNumber = i++ }
-            };
+                freeTextQuestions = result[QuestionType.FreeText]
+                    .Select(x => new FreeTextQuestion { SequentialNumber = x.SequenceNumber, Text = x.Text }).ToList();
+            }
 
-            var radioButtonQuestions = new List<RadioButtonQuestion>
+            if (result.ContainsKey(QuestionType.Checkbox))
             {
-                new RadioButtonQuestion { SequentialNumber = i++, AvailableAnswers = new List<string> { "R1", "R1" } },
-                new RadioButtonQuestion { SequentialNumber = i++, AvailableAnswers = new List<string> { "R2", "R22" } },
-            };
+                checkBoxQuestions = result[QuestionType.Checkbox].Select(
+                    x => new CheckBoxQuestion
+                    {
+                        Text = x.Text,
+                        SequentialNumber = x.SequenceNumber,
+                        Answers = x.QuestionAnswers.Select(y => y.Text).ToList(),
+                    }).ToList();
+            }
 
-            var checkBoxQuestions = new List<CheckBoxQuestion>
+            if (result.ContainsKey(QuestionType.RadioButton))
             {
-                new CheckBoxQuestion { SequentialNumber = i++, Answers = new List<string> { "C1", "C11", "C111" } },
-                new CheckBoxQuestion { SequentialNumber = i++, Answers = new List<string> { "C222" } }
-            };
+                radioButtonQuestions = result[QuestionType.RadioButton].Select(
+                    x => new RadioButtonQuestion
+                    {
+                        Text = x.Text,
+                        AvailableAnswers = x.QuestionAnswers.Select(y => y.Text).ToList(),
+                        SequentialNumber = x.SequenceNumber
+                    }).ToList();
+            }
 
-            var surveyQuestions = new List<BaseSurveyQuestion>();
-            surveyQuestions.AddRange(freeTextQuestions);
-            surveyQuestions.AddRange(radioButtonQuestions);
-            surveyQuestions.AddRange(checkBoxQuestions);
-
-            return surveyQuestions;
+            return new SurveySubmission(id, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
         }
     }
 }
