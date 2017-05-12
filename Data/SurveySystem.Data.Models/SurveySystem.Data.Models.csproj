@@ -59,9 +59,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Answer.cs" />
     <Compile Include="ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Question.cs" />
+    <Compile Include="QuestionAnswer.cs" />
+    <Compile Include="RespondentAnswer.cs" />
     <Compile Include="Survey.cs" />
     <Compile Include="QuestionType.cs" />
   </ItemGroup>

@@ -27,23 +27,4 @@
 
         public virtual ICollection<RespondentAnswer> RespondentAnswers { get; set; }
     }
-
-    public class Answer : BaseModel<int>
-    {
-        public int QuestionId { get; set; }
-
-        public virtual Question Question { get; set; }
-
-        [Required]
-        public string Text { get; set; }
-    }
-
-    public class QuestionAnswer : Answer
-    {
-    }
-
-    public class RespondentAnswer : Answer
-    {
-        // TODO: respondent info!
-    }
 }
