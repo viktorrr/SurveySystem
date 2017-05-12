@@ -37,6 +37,7 @@
                 Title = request.Title
             };
 
+            // TODO: validate this!
             for (int i = 0; i < request.Questions.Count; i++)
             {
                 var questionDetails = request.Questions[i];
@@ -64,13 +65,15 @@
         [HttpGet]
         public ViewResult Submit(int id = 1)
         {
+            // TODO: validate date!
             var submission = this.GetSubmission(id);
             return this.View(submission);
         }
 
         [HttpPost]
-        public ViewResult Submit(SurveySubmission submission)
+        public ViewResult Submit(int id, SurveySubmission submission)
         {
+            // TODO: validate user input (id + answers)!
             return this.View(submission);
         }
 
