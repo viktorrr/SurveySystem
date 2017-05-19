@@ -71,56 +71,80 @@
         public ViewResult Submit(int id = 1)
         {
             // TODO: validate date!
-            var submission = this.GetSubmission(id);
+            var submission = this.CreateRawSubmission(id);
             return this.View(submission);
         }
 
         [HttpPost]
-        public ViewResult Submit(int id, SurveySubmission submission)
+        public ViewResult Submit(int id, SurveySubmission userSubmission)
         {
-            // TODO: validate user input (id + answers)!
+            if (!this.ModelState.IsValid)
+            {
+                var rawSubmission = this.CreateSubmissionWithAnswers(id, userSubmission);
+                return this.View(rawSubmission);
+            }
 
             var survey = this.GetSurvey(id);
             var questionsMap = this.BuildQuestionMap(survey);
 
             var dbCheckboxQuestions = questionsMap[QuestionType.Checkbox].OrderBy(x => x.SequenceNumber).ToList();
-            for (var i = 0; i < submission.CheckBoxQuestions.Count; i++)
+            for (var i = 0; i < userSubmission.CheckBoxQuestions.Count; i++)
             {
                 var dbQuestion = dbCheckboxQuestions[i];
                 var answers = dbQuestion.QuestionAnswers.OrderBy(x => x.Id).Select(x => x.Text).ToList();
 
-                for (var j = 0; j < submission.CheckBoxQuestions[i].Answered.Count; j++)
+                for (var j = 0; j < userSubmission.CheckBoxQuestions[i].Answered.Count; j++)
                 {
-                    if (submission.CheckBoxQuestions[i].Answered[j])
+                    if (userSubmission.CheckBoxQuestions[i].Answered[j])
                     {
                         dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answers[j] });
                     }
                 }
             }
 
-            this.db.SaveChanges();
-
             var dbRadioButtonQuestions = questionsMap[QuestionType.RadioButton].OrderBy(x => x.SequenceNumber).ToList();
-            for (int i = 0; i < submission.RadioButtonQuestions.Count; i++)
+            for (int i = 0; i < userSubmission.RadioButtonQuestions.Count; i++)
             {
                 var dbQuestion = dbRadioButtonQuestions[i];
-                var answeredQuestion = submission.RadioButtonQuestions[i];
+                var answeredQuestion = userSubmission.RadioButtonQuestions[i];
 
                 dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answeredQuestion.Answer });
             }
 
             var freeTextQuestions = questionsMap[QuestionType.FreeText].OrderBy(x => x.SequenceNumber).ToList();
-            for (int i = 0; i < submission.FreeTextQuestions.Count; i++)
+            for (int i = 0; i < userSubmission.FreeTextQuestions.Count; i++)
             {
                 var dbQuestion = freeTextQuestions[i];
-                var answeredQuestion = submission.FreeTextQuestions[i];
+                var answeredQuestion = userSubmission.FreeTextQuestions[i];
 
                 dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answeredQuestion.Answer });
             }
 
             this.db.SaveChanges();
 
-            return this.View(submission);
+            return this.View(userSubmission);
+        }
+
+        private SurveySubmission CreateSubmissionWithAnswers(int id, SurveySubmission userSubmission)
+        {
+            var result = this.CreateRawSubmission(id);
+            for (int i = 0; i < result.CheckBoxQuestions.Count; i++)
+            {
+                result.CheckBoxQuestions[i].Answered =
+                    userSubmission.CheckBoxQuestions[i].Answered;
+            }
+
+            for (var i = 0; i < result.FreeTextQuestions.Count; i++)
+            {
+                result.FreeTextQuestions[i] = userSubmission.FreeTextQuestions[i];
+            }
+
+            for (var i = 0; i < result.RadioButtonQuestions.Count; i++)
+            {
+                result.RadioButtonQuestions[i] = userSubmission.RadioButtonQuestions[i];
+            }
+
+            return result;
         }
 
         private List<QuestionAnswer> CreateQuestionAnswers(Question question, string answers)
@@ -132,7 +156,7 @@
             return questionAnswers.Select(x => new QuestionAnswer { Question = question, Text = x }).ToList();
         }
 
-        private SurveySubmission GetSubmission(int id)
+        private SurveySubmission CreateRawSubmission(int id)
         {
             var survey = this.GetSurvey(id);
             var questionsMap = this.BuildQuestionMap(survey);
