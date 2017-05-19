@@ -23,6 +23,10 @@
         [Required]
         public QuestionType QuestionType { get; set; }
 
+        public virtual Survey Survey { get; set; }
+
+        public int SurveyId { get; set; }
+
         public virtual ICollection<QuestionAnswer> QuestionAnswers { get; set; }
 
         public virtual ICollection<RespondentAnswer> RespondentAnswers { get; set; }

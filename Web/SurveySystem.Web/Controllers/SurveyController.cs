@@ -8,9 +8,14 @@
 
     using AutoMapper.Internal;
 
+    using Glimpse.Core.Extensibility;
+    using Glimpse.Core.Extensions;
+
     using SurveySystem.Data;
     using SurveySystem.Data.Models;
     using SurveySystem.Web.Models.Survey;
+
+    using WebGrease.Css.Extensions;
 
     public class SurveyController : BaseController
     {
@@ -74,6 +79,47 @@
         public ViewResult Submit(int id, SurveySubmission submission)
         {
             // TODO: validate user input (id + answers)!
+
+            var survey = this.GetSurvey(id);
+            var questionsMap = this.BuildQuestionMap(survey);
+
+            var dbCheckboxQuestions = questionsMap[QuestionType.Checkbox].OrderBy(x => x.SequenceNumber).ToList();
+            for (var i = 0; i < submission.CheckBoxQuestions.Count; i++)
+            {
+                var dbQuestion = dbCheckboxQuestions[i];
+                var answers = dbQuestion.QuestionAnswers.OrderBy(x => x.Id).Select(x => x.Text).ToList();
+
+                for (var j = 0; j < submission.CheckBoxQuestions[i].Answered.Count; j++)
+                {
+                    if (submission.CheckBoxQuestions[i].Answered[j])
+                    {
+                        dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answers[j] });
+                    }
+                }
+            }
+
+            this.db.SaveChanges();
+
+            var dbRadioButtonQuestions = questionsMap[QuestionType.RadioButton].OrderBy(x => x.SequenceNumber).ToList();
+            for (int i = 0; i < submission.RadioButtonQuestions.Count; i++)
+            {
+                var dbQuestion = dbRadioButtonQuestions[i];
+                var answeredQuestion = submission.RadioButtonQuestions[i];
+
+                dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answeredQuestion.Answer });
+            }
+
+            var freeTextQuestions = questionsMap[QuestionType.FreeText].OrderBy(x => x.SequenceNumber).ToList();
+            for (int i = 0; i < submission.FreeTextQuestions.Count; i++)
+            {
+                var dbQuestion = freeTextQuestions[i];
+                var answeredQuestion = submission.FreeTextQuestions[i];
+
+                dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answeredQuestion.Answer });
+            }
+
+            this.db.SaveChanges();
+
             return this.View(submission);
         }
 
@@ -88,25 +134,35 @@
 
         private SurveySubmission GetSubmission(int id)
         {
-            var survey = this.db.Surveys.Include(x => x.Questions).First(x => x.Id == id);
+            var survey = this.GetSurvey(id);
+            var questionsMap = this.BuildQuestionMap(survey);
 
-            var result = survey.Questions
+            var freeTextQuestions = this.BuildFreeTextQuestions(questionsMap);
+            var radioButtonQuestions = this.RadioButtonQuestions(questionsMap);
+            var checkBoxQuestions = this.BuildCheckBoxQuestions(questionsMap);
+
+            return new SurveySubmission(id, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
+        }
+
+        private Survey GetSurvey(int id)
+        {
+            return this.db.Surveys.Include(x => x.Questions).First(x => x.Id == id);
+        }
+
+        private IDictionary<QuestionType, IEnumerable<Question>> BuildQuestionMap(Survey survey)
+        {
+            return survey.Questions
                 .GroupBy(x => x.QuestionType, (type, values) => new { Type = type, Questions = values })
                 .ToDictionary(x => x.Type, x => x.Questions);
+        }
 
-            var freeTextQuestions = new List<FreeTextQuestion>();
-            var radioButtonQuestions = new List<RadioButtonQuestion>();
-            var checkBoxQuestions = new List<CheckBoxQuestion>();
-
-            if (result.ContainsKey(QuestionType.FreeText))
+        private List<CheckBoxQuestion> BuildCheckBoxQuestions(
+            IDictionary<QuestionType, IEnumerable<Question>> questionsMap)
+        {
+            var result = new List<CheckBoxQuestion>();
+            if (questionsMap.ContainsKey(QuestionType.Checkbox))
             {
-                freeTextQuestions = result[QuestionType.FreeText]
-                    .Select(x => new FreeTextQuestion { SequentialNumber = x.SequenceNumber, Text = x.Text }).ToList();
-            }
-
-            if (result.ContainsKey(QuestionType.Checkbox))
-            {
-                checkBoxQuestions = result[QuestionType.Checkbox].Select(
+                result = questionsMap[QuestionType.Checkbox].Select(
                     x => new CheckBoxQuestion
                     {
                         Text = x.Text,
@@ -115,9 +171,29 @@
                     }).ToList();
             }
 
-            if (result.ContainsKey(QuestionType.RadioButton))
+            return result;
+        }
+
+        private List<FreeTextQuestion> BuildFreeTextQuestions(
+            IDictionary<QuestionType, IEnumerable<Question>> questionsMap)
+        {
+            var result = new List<FreeTextQuestion>();
+            if (questionsMap.ContainsKey(QuestionType.FreeText))
             {
-                radioButtonQuestions = result[QuestionType.RadioButton].Select(
+                result = questionsMap[QuestionType.FreeText]
+                    .Select(x => new FreeTextQuestion { SequentialNumber = x.SequenceNumber, Text = x.Text }).ToList();
+            }
+
+            return result;
+        }
+
+        private List<RadioButtonQuestion> RadioButtonQuestions(
+            IDictionary<QuestionType, IEnumerable<Question>> questionsMap)
+        {
+            var result = new List<RadioButtonQuestion>();
+            if (questionsMap.ContainsKey(QuestionType.RadioButton))
+            {
+                result = questionsMap[QuestionType.RadioButton].Select(
                     x => new RadioButtonQuestion
                     {
                         Text = x.Text,
@@ -126,7 +202,7 @@
                     }).ToList();
             }
 
-            return new SurveySubmission(id, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
+            return result;
         }
     }
 }
