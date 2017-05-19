@@ -76,8 +76,47 @@
                         @Html.LabelFor(x => x.Questions[0].Type, "Отговори", new { @class = "control-label col-sm-2" })
                         <div class="col-sm-5">
                             @Html.TextAreaFor(x => x.Questions[0].Answer, 5, 1, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Questions[0].Answer)
                         </div>
                     </div>
+
+                    @{
+                        if (Model != null && Model.Questions.Count > 1)
+                        {
+                            for (int i = 1; i < Model.Questions.Count; i++)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Questions[i].Text, "Въпрос", new { @class = "control-label col-sm-2" })
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.Questions[i].Text, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Questions[0].Type, "Тип на въпроса", new { @class = "control-label col-sm-2" })
+                                    <div class="col-sm-10">
+                                        @{
+                                            foreach (var type in questionTypes)
+                                            {
+                                                <label class="radio-button-container">
+                                                    @Html.RadioButtonFor(x => x.Questions[i].Type, Convert.ToInt32(type), Html.BuildSurveryQuestionProperties(type))
+                                                    <span>@EnumUtil.ToString(type)</span>
+                                                </label>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.Questions[i].Type, "Отговори", new { @class = "control-label col-sm-2" })
+                                    <div class="col-sm-5">
+                                        @Html.TextAreaFor(x => x.Questions[i].Answer, 5, 1, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.Questions[i].Answer)
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
                 </div>
             </div>
 

@@ -56,15 +56,27 @@
                 if (question.QuestionType != QuestionType.FreeText)
                 {
                     question.QuestionAnswers = this.CreateQuestionAnswers(question, questionDetails.Answer);
+                    if (!question.QuestionAnswers.Any())
+                    {
+                        this.ModelState.AddModelError($"Questions[{i}].Answer", "Въпросът трябва да има поне един отговор.");
+                    }
                 }
 
                 survey.Questions.Add(question);
             }
 
-            this.db.Surveys.Add(survey);
-            this.db.SaveChanges();
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(request);
+            }
+            else
+            {
+                // TODO: redirect to another page!
+                this.db.Surveys.Add(survey);
+                this.db.SaveChanges();
 
-            return this.View();
+                return this.View();
+            }
         }
 
         [HttpGet]
@@ -122,6 +134,7 @@
 
             this.db.SaveChanges();
 
+            // TODO: redirect to another page!
             return this.View(userSubmission);
         }
 
@@ -149,6 +162,11 @@
 
         private List<QuestionAnswer> CreateQuestionAnswers(Question question, string answers)
         {
+            if (string.IsNullOrEmpty(answers))
+            {
+                return new List<QuestionAnswer>();
+            }
+
             var questionAnswers = answers.Split(
                 new[] { Environment.NewLine },
                 StringSplitOptions.RemoveEmptyEntries);
