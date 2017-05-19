@@ -168,7 +168,9 @@
 
                     $('#new-question').click(function () {
                         var replacementRegex = formatReplacementRegex();
-                        var htmlToAppend = $template.html().replace(/(_|\[)(\d)(_|\])/g, replacementRegex);
+                        var htmlToAppend = $template.html()
+                            .replace(/(_|\[)(\d)(_|\])/g, replacementRegex)
+                            .replace(/(Questions\[\d\].*?>)(.*?)</g, '$1<');
                         var $element = $(htmlToAppend);
                         $element.hide();
 
