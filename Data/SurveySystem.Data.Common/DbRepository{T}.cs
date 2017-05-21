@@ -37,12 +37,7 @@
         public T GetById(object id)
         {
             var item = this.DbSet.Find(id);
-            if (item.IsDeleted)
-            {
-                return null;
-            }
-
-            return item;
+            return item.IsDeleted ? null : item;
         }
 
         public void Add(T entity)

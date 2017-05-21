@@ -6,16 +6,9 @@
     using System.Linq;
     using System.Web.Mvc;
 
-    using AutoMapper.Internal;
-
-    using Glimpse.Core.Extensibility;
-    using Glimpse.Core.Extensions;
-
     using SurveySystem.Data;
     using SurveySystem.Data.Models;
     using SurveySystem.Web.Models.Survey;
-
-    using WebGrease.Css.Extensions;
 
     public class SurveyController : BaseController
     {
@@ -42,7 +35,6 @@
                 Title = request.Title
             };
 
-            // TODO: validate this!
             for (int i = 0; i < request.Questions.Count; i++)
             {
                 var questionDetails = request.Questions[i];
@@ -69,14 +61,12 @@
             {
                 return this.View(request);
             }
-            else
-            {
-                // TODO: redirect to another page!
-                this.db.Surveys.Add(survey);
-                this.db.SaveChanges();
 
-                return this.View();
-            }
+            // TODO: redirect to another page!
+            this.db.Surveys.Add(survey);
+            this.db.SaveChanges();
+
+            return this.View();
         }
 
         [HttpGet]
@@ -209,7 +199,7 @@
                     {
                         Text = x.Text,
                         SequentialNumber = x.SequenceNumber,
-                        Answers = x.QuestionAnswers.Select(y => y.Text).ToList(),
+                        Answers = x.QuestionAnswers.Select(y => y.Text).ToList()
                     }).ToList();
             }
 

@@ -1,7 +1,5 @@
 ﻿namespace SurveySystem.Services.Data.Common.Contracts
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using SurveySystem.Data.Common.Models;
 

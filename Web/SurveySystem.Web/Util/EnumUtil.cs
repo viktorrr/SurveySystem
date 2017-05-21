@@ -17,7 +17,7 @@
             {
                 { QuestionType.FreeText, "Свободен текст" },
                 { QuestionType.Checkbox, "Множество отговори(чекбокс)" },
-                { QuestionType.RadioButton, "Единствен отговор(радио бутон)" },
+                { QuestionType.RadioButton, "Единствен отговор(радио бутон)" }
             };
 
         public static string ToString(QuestionType type)
@@ -25,9 +25,9 @@
             return QuestionDictionary[type];
         }
 
-        public static IEnumerable<T> GetEnumValues<T>()
+        public static ICollection<T> GetEnumValues<T>()
         {
-            return Enum.GetValues(typeof(T)).Cast<T>();
+            return Enum.GetValues(typeof(T)).Cast<T>().ToList();
         }
     }
 }

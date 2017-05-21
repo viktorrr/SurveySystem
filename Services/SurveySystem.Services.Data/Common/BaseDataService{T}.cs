@@ -1,10 +1,11 @@
-﻿namespace SurveySystem.Services.Data
+﻿namespace SurveySystem.Services.Data.Common
 {
     using System;
     using System.Linq;
-    using Common.Contracts;
+
     using SurveySystem.Data.Common;
     using SurveySystem.Data.Common.Models;
+    using SurveySystem.Services.Data.Common.Contracts;
 
     public abstract class BaseDataService<T> : IBaseDataService<T>
         where T : class, IDeletableEntity, IAuditInfo
