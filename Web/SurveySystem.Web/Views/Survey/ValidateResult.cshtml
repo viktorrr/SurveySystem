@@ -1,0 +1,12 @@
+﻿
+@model bool
+
+@{
+    var msg = Model ? "Кодът е валиден." : "Невалиден код.";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <p>@msg</p>
+    </div>
+</div>

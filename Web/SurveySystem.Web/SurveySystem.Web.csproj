@@ -234,6 +234,7 @@
     <Compile Include="Models\Survey\SingleAnswerQuestion.cs" />
     <Compile Include="Models\Survey\NewSurveyQustionDetails.cs" />
     <Compile Include="Models\Survey\SurveySubmission.cs" />
+    <Compile Include="Models\Survey\ValidateCodeRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\Manage\SetPasswordViewModel.cs" />
@@ -945,6 +946,8 @@
     <Content Include="Views\Survey\Details.cshtml" />
     <Content Include="Views\Survey\InviteResult.cshtml" />
     <Content Include="Views\Survey\Invite.cshtml" />
+    <Content Include="Views\Survey\Validate.cshtml" />
+    <Content Include="Views\Survey\ValidateResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="node_modules\moment\moment.d.ts" />

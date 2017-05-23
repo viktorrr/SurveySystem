@@ -137,6 +137,26 @@
         }
 
         [HttpGet]
+        public ViewResult Validate(int id)
+        {
+            ValidateCodeRequest request = null;
+
+            if (this.db.Surveys.FirstOrDefault(x => x.Id == id) != null)
+            {
+                request = new ValidateCodeRequest { SurveyId = id };
+            }
+
+            return this.View(request);
+        }
+
+        [HttpPost]
+        public ViewResult Validate(ValidateCodeRequest request)
+        {
+            // TODO: validate
+            return this.View("ValidateResult", true);
+        }
+
+        [HttpGet]
         public ActionResult Invite(int id)
         {
             EmailInvitation invitation = null;
