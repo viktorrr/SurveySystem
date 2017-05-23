@@ -226,6 +226,7 @@
     <Compile Include="Models\Manage\ConfigureTwoFactorViewModel.cs" />
     <Compile Include="Models\Survey\BaseSurveyQuestion.cs" />
     <Compile Include="Models\Survey\CheckBoxQuestion.cs" />
+    <Compile Include="Models\Survey\EmailInvitation.cs" />
     <Compile Include="Models\Survey\FreeTextQuestion.cs" />
     <Compile Include="Models\Survey\MultiAnswerQuestion.cs" />
     <Compile Include="Models\Survey\NewSurveyRequest.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Util\HtmlHelperExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\InvitationTemplate.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -940,6 +942,9 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Survey\New.cshtml" />
     <Content Include="Views\Survey\Submit.cshtml" />
+    <Content Include="Views\Survey\Details.cshtml" />
+    <Content Include="Views\Survey\InviteResult.cshtml" />
+    <Content Include="Views\Survey\Invite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="node_modules\moment\moment.d.ts" />

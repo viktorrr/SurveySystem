@@ -1,0 +1,20 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "title";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Административни дейности</h3>
+                </div>
+                <div class="panel-body">
+                    @Html.ActionLink("Изпрати покана", "Invite", new { id = Model })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

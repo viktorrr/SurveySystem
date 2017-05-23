@@ -1,0 +1,11 @@
+﻿@model bool
+
+@{
+    var msg = Model ? "Заявката е обработена успешно." : "Невалидна заявка";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <p>@msg</p>
+    </div>
+</div>

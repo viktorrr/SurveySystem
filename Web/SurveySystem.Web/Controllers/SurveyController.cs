@@ -8,11 +8,13 @@
 
     using SurveySystem.Data;
     using SurveySystem.Data.Models;
+    using SurveySystem.Services.Web;
     using SurveySystem.Web.Models.Survey;
 
     public class SurveyController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private IEmailService emailService = new EmailService();
 
         [HttpGet]
         public ViewResult New()
@@ -126,6 +128,63 @@
 
             // TODO: redirect to another page!
             return this.View(userSubmission);
+        }
+
+        [HttpGet]
+        public ViewResult Details(int id)
+        {
+            return this.View(id);
+        }
+
+        [HttpGet]
+        public ActionResult Invite(int id)
+        {
+            EmailInvitation invitation = null;
+
+            if (this.db.Surveys.FirstOrDefault(x => x.Id == id) != null)
+            {
+                invitation = new EmailInvitation { SurveyId = id };
+            }
+
+            return this.View(invitation);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Invite(EmailInvitation request)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("InviteResult", false);
+            }
+
+            var emails = request.EmailList
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries );
+
+            if (emails.Length == 0)
+            {
+                return this.View("InviteResult", false);
+            }
+
+            var survey = this.db.Surveys.First(x => x.Id == request.SurveyId);
+            var url = this.FormatSurveyUrl(request.SurveyId);
+
+            if (survey == null)
+            {
+                return this.View("InviteResult", false);
+            }
+
+            this.emailService.SendNewReservationEmail(request.EmailList, survey.Title, url);
+            return this.View("InviteResult", true);
+        }
+
+        private string FormatSurveyUrl(int id)
+        {
+            var scheme = this.Request.Url.Scheme;
+            var authority = this.Request.Url.Authority;
+            var modifyUrl = this.Url.Action("Submit", new { id = id });
+
+            return $"{scheme}://{authority}{modifyUrl}";
         }
 
         private SurveySubmission CreateSubmissionWithAnswers(int id, SurveySubmission userSubmission)

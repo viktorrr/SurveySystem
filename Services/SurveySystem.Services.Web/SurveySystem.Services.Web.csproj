@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -43,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmailService.cs" />
     <Compile Include="HttpCacheService.cs" />
     <Compile Include="ICacheService.cs" />
     <Compile Include="IdentifierProvider.cs" />
+    <Compile Include="IEmailService.cs" />
     <Compile Include="IIdentifierProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
