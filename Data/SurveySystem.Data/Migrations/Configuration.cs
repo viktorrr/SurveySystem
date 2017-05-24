@@ -2,6 +2,8 @@
 {
     using System.Data.Entity.Migrations;
 
+    using SurveySystem.Data.Models;
+
     public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()

@@ -52,7 +52,7 @@
                     question.QuestionAnswers = this.CreateQuestionAnswers(question, questionDetails.Answer);
                     if (!question.QuestionAnswers.Any())
                     {
-                        this.ModelState.AddModelError($"Questions[{i}].Answer", "Въпросът трябва да има поне един отговор.");
+                        this.ModelState.AddModelError($"Questions[{i}].QuestionAnswer", "Въпросът трябва да има поне един отговор.");
                     }
                 }
 
@@ -91,17 +91,19 @@
             var survey = this.GetSurvey(id);
             var questionsMap = this.BuildQuestionMap(survey);
 
+            var dbSubmission = new Submission { Survey = survey };
+
             var dbCheckboxQuestions = questionsMap[QuestionType.Checkbox].OrderBy(x => x.SequenceNumber).ToList();
             for (var i = 0; i < userSubmission.CheckBoxQuestions.Count; i++)
             {
                 var dbQuestion = dbCheckboxQuestions[i];
-                var answers = dbQuestion.QuestionAnswers.OrderBy(x => x.Id).Select(x => x.Text).ToList();
+                var answers = dbQuestion.QuestionAnswers.OrderBy(x => x.Id).ToList();
 
                 for (var j = 0; j < userSubmission.CheckBoxQuestions[i].Answered.Count; j++)
                 {
                     if (userSubmission.CheckBoxQuestions[i].Answered[j])
                     {
-                        dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answers[j] });
+                        dbSubmission.Answers.Add(new RespondentAnswer { QuestionAnswer = answers[j] });
                     }
                 }
             }
@@ -111,8 +113,9 @@
             {
                 var dbQuestion = dbRadioButtonQuestions[i];
                 var answeredQuestion = userSubmission.RadioButtonQuestions[i];
+                var dbAnswer = dbQuestion.QuestionAnswers.First(x => x.Text == answeredQuestion.Answer);
 
-                dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answeredQuestion.Answer });
+                dbQuestion.RespondentAnswers.Add(new RespondentAnswer { QuestionAnswer = dbAnswer });
             }
 
             var freeTextQuestions = questionsMap[QuestionType.FreeText].OrderBy(x => x.SequenceNumber).ToList();
@@ -124,6 +127,7 @@
                 dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answeredQuestion.Answer });
             }
 
+            this.db.Submission.Add(dbSubmission);
             this.db.SaveChanges();
 
             // TODO: redirect to another page!
@@ -278,7 +282,7 @@
                     {
                         Text = x.Text,
                         SequentialNumber = x.SequenceNumber,
-                        Answers = x.QuestionAnswers.Select(y => y.Text).ToList()
+                        Answers = x.QuestionAnswers.OrderBy(y => y.Id).Select(y => y.Text).ToList()
                     }).ToList();
             }
 

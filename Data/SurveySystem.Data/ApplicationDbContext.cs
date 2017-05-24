@@ -2,6 +2,7 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Linq;
 
     using Common.Models;
@@ -24,6 +25,10 @@
         public IDbSet<RespondentAnswer> RespondentAnswers { get; set; }
 
         public IDbSet<QuestionAnswer> QuestionAnswers { get; set; }
+
+        public IDbSet<Respondent> Respondents { get; set; }
+
+        public IDbSet<Submission> Submission { get; set; }
 
         public override int SaveChanges()
         {

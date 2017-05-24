@@ -11,6 +11,7 @@
         public Survey()
         {
             this.Questions = new HashSet<Question>();
+            this.Submissions = new HashSet<Submission>();
         }
 
         [Required]
@@ -22,6 +23,8 @@
         [Required]
         public DateTime BeginsOn { get; set; }
 
-        public ICollection<Question> Questions { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
+
+        public virtual ICollection<Submission> Submissions { get; set; }
     }
 }
