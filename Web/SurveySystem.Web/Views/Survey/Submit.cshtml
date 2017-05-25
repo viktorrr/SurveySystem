@@ -10,97 +10,104 @@
 <div class="row">
     <div class="col-md-12">
         <h2 class="text-center">@ViewBag.Title</h2>
-
-        @Html.ValidationSummary(true)
-        @using (Html.BeginForm("Submit", "Survey", new { id = Model.SurveyId }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @if (Model == null)
         {
-            @Html.AntiForgeryToken()
+            <p>Анкетата не съществува или все още е неактивна.</p>
+        }
+        else
+        {
 
-            var freeTextQuestions = 0;
-            var checkboxQuestions = 0;
-            var radioButtonQuestions = 0;
-
-            for (int i = 0; i < Model.QuestionTypes.Count; i++)
+            @Html.ValidationSummary(true)
+            using (Html.BeginForm("Submit", "Survey", new { id = Model.SurveyId }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
-                if (Model.QuestionTypes[i] == QuestionType.FreeText)
-                {
-                    var question = Model.GetFreeTextQuestion(i);
+                @Html.AntiForgeryToken()
 
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            @Html.LabelFor(x => x.FreeTextQuestions[freeTextQuestions].Text, Html.FormatQuestion(i, question), new { @class = "control-label" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            @Html.TextAreaFor(x => x.FreeTextQuestions[freeTextQuestions].Answer, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(x => x.FreeTextQuestions[freeTextQuestions].Answer)
-                            @{
-                                freeTextQuestions++;
-                            }
-                        </div>
-                    </div>
-                }
-                else
+                var freeTextQuestions = 0;
+                var checkboxQuestions = 0;
+                var radioButtonQuestions = 0;
+
+                for (int i = 0; i < Model.QuestionTypes.Count; i++)
                 {
-                    if (Model.QuestionTypes[i] == QuestionType.Checkbox)
+                    if (Model.QuestionTypes[i] == QuestionType.FreeText)
                     {
-                        var question = Model.GetCheckBoxQuestion(i);
-                        var answers = question.Answers;
+                        var question = Model.GetFreeTextQuestion(i);
 
                         <div class="form-group">
                             <div class="col-md-12">
-                                @Html.LabelFor(x => x.CheckBoxQuestions[checkboxQuestions].Text, Html.FormatQuestion(i, question), new { @class = "control-label" })
+                                @Html.LabelFor(x => x.FreeTextQuestions[freeTextQuestions].Text, Html.FormatQuestion(i, question), new { @class = "control-label" })
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-12">
-                                @for (int j = 0; j < answers.Count; j++)
-                                {
-                                    <label>
-                                        @Html.CheckBoxFor(x => x.CheckBoxQuestions[checkboxQuestions].Answered[j], answers[j])
-                                        @answers[j]
-                                    </label>
-                                }
+                                @Html.TextAreaFor(x => x.FreeTextQuestions[freeTextQuestions].Answer, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.FreeTextQuestions[freeTextQuestions].Answer)
                                 @{
-                                    checkboxQuestions++;
+                                    freeTextQuestions++;
                                 }
                             </div>
                         </div>
                     }
                     else
                     {
-                        var question = Model.GetRadioButtonQuestion(i);
-                        var answers = question.AvailableAnswers;
+                        if (Model.QuestionTypes[i] == QuestionType.Checkbox)
+                        {
+                            var question = Model.GetCheckBoxQuestion(i);
+                            var answers = question.Answers;
 
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                @Html.LabelFor(x => x.RadioButtonQuestions[radioButtonQuestions].Text, Html.FormatQuestion(i, question), new { @class = "control-label" })
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(x => x.CheckBoxQuestions[checkboxQuestions].Text, Html.FormatQuestion(i, question), new { @class = "control-label" })
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                @for (int j = 0; j < answers.Count; j++)
-                                {
-                                    @Html.RadioButtonFor(x => x.RadioButtonQuestions[radioButtonQuestions].Answer, answers[j], Html.BuildRadioButtonAnswerAttributes(question, j))
-                                    <span>@answers[j]</span>
-                                }
-                                @{
-                                    radioButtonQuestions++;
-                                }
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @for (int j = 0; j < answers.Count; j++)
+                                    {
+                                        <label>
+                                            @Html.CheckBoxFor(x => x.CheckBoxQuestions[checkboxQuestions].Answered[j], answers[j])
+                                            @answers[j]
+                                        </label>
+                                    }
+                                    @{
+                                        checkboxQuestions++;
+                                    }
+                                </div>
                             </div>
-                        </div>
+                        }
+                        else
+                        {
+                            var question = Model.GetRadioButtonQuestion(i);
+                            var answers = question.AvailableAnswers;
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(x => x.RadioButtonQuestions[radioButtonQuestions].Text, Html.FormatQuestion(i, question), new { @class = "control-label" })
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @for (int j = 0; j < answers.Count; j++)
+                                    {
+                                        @Html.RadioButtonFor(x => x.RadioButtonQuestions[radioButtonQuestions].Answer, answers[j], Html.BuildRadioButtonAnswerAttributes(question, j))
+                                        <span>@answers[j]</span>
+                                    }
+                                    @{
+                                        radioButtonQuestions++;
+                                    }
+                                </div>
+                            </div>
+                        }
                     }
                 }
-            }
 
-            <div class="form-group">
-                <div class="col-md-5">
-                    <input type="submit" value="Запази" class="btn btn-default" />
+                <div class="form-group">
+                    <div class="col-md-5">
+                        <input type="submit" value="Запази" class="btn btn-default" />
+                    </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>

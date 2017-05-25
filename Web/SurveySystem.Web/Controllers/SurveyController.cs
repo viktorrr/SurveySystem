@@ -74,21 +74,28 @@
         [HttpGet]
         public ViewResult Submit(int id = 1)
         {
-            // TODO: validate date!
-            var submission = this.CreateRawSubmission(id);
+            var survey = this.GetSurvey(id);
+            if (survey == null || survey.BeginsOn > DateTime.Now)
+            {
+                return this.View((SurveySubmission)null);
+            }
+
+            var submission = this.BuildSurveySubmission(survey);
+
             return this.View(submission);
         }
 
         [HttpPost]
         public ViewResult Submit(int id, SurveySubmission userSubmission)
         {
+            var survey = this.GetSurvey(id);
+
             if (!this.ModelState.IsValid)
             {
-                var rawSubmission = this.CreateSubmissionWithAnswers(id, userSubmission);
+                var rawSubmission = this.CreateSubmissionWithAnswers(survey, userSubmission);
                 return this.View(rawSubmission);
             }
 
-            var survey = this.GetSurvey(id);
             var questionsMap = this.BuildQuestionMap(survey);
 
             var dbSubmission = new Submission { Survey = survey };
@@ -211,9 +218,9 @@
             return $"{scheme}://{authority}{modifyUrl}";
         }
 
-        private SurveySubmission CreateSubmissionWithAnswers(int id, SurveySubmission userSubmission)
+        private SurveySubmission CreateSubmissionWithAnswers(Survey survey, SurveySubmission userSubmission)
         {
-            var result = this.CreateRawSubmission(id);
+            var result = this.BuildSurveySubmission(survey);
             for (int i = 0; i < result.CheckBoxQuestions.Count; i++)
             {
                 result.CheckBoxQuestions[i].Answered =
@@ -247,21 +254,20 @@
             return questionAnswers.Select(x => new QuestionAnswer { Question = question, Text = x }).ToList();
         }
 
-        private SurveySubmission CreateRawSubmission(int id)
+        private SurveySubmission BuildSurveySubmission(Survey survey)
         {
-            var survey = this.GetSurvey(id);
             var questionsMap = this.BuildQuestionMap(survey);
 
             var freeTextQuestions = this.BuildFreeTextQuestions(questionsMap);
             var radioButtonQuestions = this.RadioButtonQuestions(questionsMap);
             var checkBoxQuestions = this.BuildCheckBoxQuestions(questionsMap);
 
-            return new SurveySubmission(id, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
+            return new SurveySubmission(survey.Id, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
         }
 
         private Survey GetSurvey(int id)
         {
-            return this.db.Surveys.Include(x => x.Questions).First(x => x.Id == id);
+            return this.db.Surveys.Include(x => x.Questions).FirstOrDefault(x => x.Id == id);
         }
 
         private IDictionary<QuestionType, IEnumerable<Question>> BuildQuestionMap(Survey survey)
