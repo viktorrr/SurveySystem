@@ -22,6 +22,12 @@
         public string FacultyNumber { get; set; }
 
         [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string IP { get; set; }
+
+        [Required]
         public virtual Submission Submission { get; set; }
 
         public int SubmissionId { get; set; }

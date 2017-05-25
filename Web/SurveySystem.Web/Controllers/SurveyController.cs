@@ -81,6 +81,10 @@
             }
 
             var submission = this.BuildSurveySubmission(survey);
+            if (!survey.IsAnonymous)
+            {
+                submission.Respondent = new SurveyRespondent();
+            }
 
             return this.View(submission);
         }
@@ -97,8 +101,19 @@
             }
 
             var questionsMap = this.BuildQuestionMap(survey);
-
             var dbSubmission = new Submission { Survey = survey };
+
+            if (!survey.IsAnonymous)
+            {
+                dbSubmission.Respondent = new Respondent
+                {
+                    FirstName = userSubmission.Respondent.FirstName,
+                    LastName = userSubmission.Respondent.LastName,
+                    FacultyNumber = userSubmission.Respondent.FacultyNumber,
+                    Email = userSubmission.Respondent.Email,
+                    IP = this.HttpContext.Request.UserHostAddress
+                };
+            }
 
             var dbCheckboxQuestions = questionsMap[QuestionType.Checkbox].OrderBy(x => x.SequenceNumber).ToList();
             for (var i = 0; i < userSubmission.CheckBoxQuestions.Count; i++)

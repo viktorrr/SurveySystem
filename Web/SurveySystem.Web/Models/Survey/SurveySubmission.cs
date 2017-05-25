@@ -41,6 +41,8 @@
 
         public int SurveyId { get; set; }
 
+        public SurveyRespondent Respondent { get; set; }
+
         public IList<FreeTextQuestion> FreeTextQuestions { get; set; }
 
         public IList<RadioButtonQuestion> RadioButtonQuestions { get; set; }

@@ -26,6 +26,43 @@
                 var checkboxQuestions = 0;
                 var radioButtonQuestions = 0;
 
+                if (Model.Respondent != null)
+                {
+
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Respondent.FirstName, "Име", new { @class = "control-label col-sm-2" })
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.Respondent.FirstName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Respondent.FirstName)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Respondent.LastName, "Фамилия", new { @class = "control-label col-sm-2" })
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.Respondent.LastName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Respondent.LastName)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Respondent.Email, "Е-мейл", new { @class = "control-label col-sm-2" })
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.Respondent.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Respondent.Email)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Respondent.FacultyNumber, "Факултетен номер", new { @class = "control-label col-sm-2" })
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.Respondent.FacultyNumber, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Respondent.FacultyNumber)
+                        </div>
+                    </div>
+
+                }
+
                 for (int i = 0; i < Model.QuestionTypes.Count; i++)
                 {
                     if (Model.QuestionTypes[i] == QuestionType.FreeText)
