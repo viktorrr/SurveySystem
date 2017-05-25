@@ -10,7 +10,7 @@
         [Required(ErrorMessage = "Полето е задължително.")]
         public string LastName { get; set; }
 
-        [EmailAddress(ErrorMessage = "Невалиден е-майл адрес.")]
+        [Required(ErrorMessage = "Невалиден е-майл адрес.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Полето е задължително.")]

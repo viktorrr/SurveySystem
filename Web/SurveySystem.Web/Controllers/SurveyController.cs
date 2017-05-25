@@ -103,9 +103,11 @@
             var questionsMap = this.BuildQuestionMap(survey);
             var dbSubmission = new Submission { Survey = survey };
 
+            Respondent respondent = null;
+
             if (!survey.IsAnonymous)
             {
-                dbSubmission.Respondent = new Respondent
+                respondent = new Respondent
                 {
                     FirstName = userSubmission.Respondent.FirstName,
                     LastName = userSubmission.Respondent.LastName,
@@ -115,7 +117,9 @@
                 };
             }
 
-            var dbCheckboxQuestions = questionsMap[QuestionType.Checkbox].OrderBy(x => x.SequenceNumber).ToList();
+            dbSubmission.Respondent = respondent;
+
+            var dbCheckboxQuestions = this.GetQuestions(questionsMap, QuestionType.Checkbox);
             for (var i = 0; i < userSubmission.CheckBoxQuestions.Count; i++)
             {
                 var dbQuestion = dbCheckboxQuestions[i];
@@ -125,28 +129,48 @@
                 {
                     if (userSubmission.CheckBoxQuestions[i].Answered[j])
                     {
-                        dbSubmission.Answers.Add(new RespondentAnswer { QuestionAnswer = answers[j] });
+                        var answer = new RespondentAnswer
+                        {
+                            QuestionAnswer = answers[j],
+                            Submission = dbSubmission,
+                            Respondent = respondent
+                        };
+
+                        dbQuestion.RespondentAnswers.Add(answer);
+                        dbSubmission.Answers.Add(answer);
                     }
                 }
             }
 
-            var dbRadioButtonQuestions = questionsMap[QuestionType.RadioButton].OrderBy(x => x.SequenceNumber).ToList();
+            var dbRadioButtonQuestions = this.GetQuestions(questionsMap, QuestionType.RadioButton);
             for (int i = 0; i < userSubmission.RadioButtonQuestions.Count; i++)
             {
                 var dbQuestion = dbRadioButtonQuestions[i];
                 var answeredQuestion = userSubmission.RadioButtonQuestions[i];
                 var dbAnswer = dbQuestion.QuestionAnswers.First(x => x.Text == answeredQuestion.Answer);
 
-                dbQuestion.RespondentAnswers.Add(new RespondentAnswer { QuestionAnswer = dbAnswer });
+                var answer = new RespondentAnswer
+                {
+                    QuestionAnswer = dbAnswer,
+                    Submission = dbSubmission,
+                    Respondent = respondent
+                };
+                dbQuestion.RespondentAnswers.Add(answer);
             }
 
-            var freeTextQuestions = questionsMap[QuestionType.FreeText].OrderBy(x => x.SequenceNumber).ToList();
+            var freeTextQuestions = this.GetQuestions(questionsMap, QuestionType.FreeText);
             for (int i = 0; i < userSubmission.FreeTextQuestions.Count; i++)
             {
                 var dbQuestion = freeTextQuestions[i];
                 var answeredQuestion = userSubmission.FreeTextQuestions[i];
 
-                dbQuestion.RespondentAnswers.Add(new RespondentAnswer { Text = answeredQuestion.Answer });
+                var answer = new RespondentAnswer
+                {
+                    Text = answeredQuestion.Answer,
+                    Submission = dbSubmission,
+                    Respondent = respondent
+                };
+                dbQuestion.RespondentAnswers.Add(answer);
             }
 
             this.db.Submission.Add(dbSubmission);
@@ -231,6 +255,20 @@
             var modifyUrl = this.Url.Action("Submit", new { id = id });
 
             return $"{scheme}://{authority}{modifyUrl}";
+        }
+
+        private IList<Question> GetQuestions(
+            IDictionary<QuestionType, IEnumerable<Question>> questionMap,
+            QuestionType questionType)
+        {
+            var result = new List<Question>();
+
+            if (questionMap.ContainsKey(questionType))
+            {
+                result = questionMap[questionType].OrderBy(x => x.SequenceNumber).ToList();
+            }
+
+            return result;
         }
 
         private SurveySubmission CreateSubmissionWithAnswers(Survey survey, SurveySubmission userSubmission)

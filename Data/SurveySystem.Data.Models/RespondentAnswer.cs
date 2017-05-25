@@ -8,6 +8,8 @@
 
         public virtual Respondent Respondent { get; set; }
 
+        public virtual Submission Submission { get; set; }
+
         public string Text { get; set; }
     }
 }
