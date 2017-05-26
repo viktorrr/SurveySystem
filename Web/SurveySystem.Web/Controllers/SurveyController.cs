@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
     using System.Web.Mvc;
 
     using SurveySystem.Data;
@@ -13,6 +15,9 @@
 
     public class SurveyController : BaseController
     {
+        private const int RandomStringLength = 15; // 15 because reasons...
+        private static readonly char[] Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890~!@#$".ToCharArray();
+
         private ApplicationDbContext db = new ApplicationDbContext();
         private IEmailService emailService = new EmailService();
 
@@ -102,6 +107,7 @@
 
             var questionsMap = this.BuildQuestionMap(survey);
             var dbSubmission = new Submission { Survey = survey };
+            var code = new SubmissionCode { Code = this.GenerateCode() };
 
             Respondent respondent = null;
 
@@ -174,10 +180,18 @@
             }
 
             this.db.Submission.Add(dbSubmission);
+            this.db.SubmissionCodes.Add(code);
+
             this.db.SaveChanges();
 
-            // TODO: redirect to another page!
-            return this.View(userSubmission);
+            if (!survey.IsAnonymous)
+            {
+                code.SubmissionId = dbSubmission.Id;
+            }
+
+            this.db.SaveChanges();
+
+            return this.View("SubmitResult", (object)code.Code);
         }
 
         [HttpGet]
@@ -187,23 +201,16 @@
         }
 
         [HttpGet]
-        public ViewResult Validate(int id)
+        public ViewResult Validate()
         {
-            ValidateCodeRequest request = null;
-
-            if (this.db.Surveys.FirstOrDefault(x => x.Id == id) != null)
-            {
-                request = new ValidateCodeRequest { SurveyId = id };
-            }
-
-            return this.View(request);
+            return this.View();
         }
 
         [HttpPost]
         public ViewResult Validate(ValidateCodeRequest request)
         {
-            // TODO: validate
-            return this.View("ValidateResult", true);
+            var exists = this.db.SubmissionCodes.Any(x => x.Code == request.Code);
+            return this.View("ValidateResult", exists);
         }
 
         [HttpGet]
@@ -377,6 +384,25 @@
             }
 
             return result;
+        }
+
+        private string GenerateCode()
+        {
+            var data = new byte[1];
+            using (var crypto = new RNGCryptoServiceProvider())
+            {
+                crypto.GetNonZeroBytes(data);
+                data = new byte[RandomStringLength];
+                crypto.GetNonZeroBytes(data);
+            }
+
+            var result = new StringBuilder(RandomStringLength);
+            foreach (var b in data)
+            {
+                result.Append(Chars[b % Chars.Length]);
+            }
+
+            return result.ToString();
         }
     }
 }

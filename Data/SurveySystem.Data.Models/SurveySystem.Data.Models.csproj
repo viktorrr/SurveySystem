@@ -66,6 +66,7 @@
     <Compile Include="Respondent.cs" />
     <Compile Include="RespondentAnswer.cs" />
     <Compile Include="Submission.cs" />
+    <Compile Include="SubmissionCode.cs" />
     <Compile Include="Survey.cs" />
     <Compile Include="QuestionType.cs" />
   </ItemGroup>

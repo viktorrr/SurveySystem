@@ -30,6 +30,8 @@
 
         public IDbSet<Submission> Submission { get; set; }
 
+        public IDbSet<SubmissionCode> SubmissionCodes { get; set; }
+
         public override int SaveChanges()
         {
             this.ApplyAuditInfoRules();
