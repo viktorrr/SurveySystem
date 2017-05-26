@@ -21,11 +21,14 @@
 
         public SurveySubmission(
             int surveyId,
+            string beginsOn,
             IList<FreeTextQuestion> freeTextQuestions,
             IList<RadioButtonQuestion> radioButtonQuestions,
             IList<CheckBoxQuestion> checkBoxQuestions)
         {
             this.SurveyId = surveyId;
+            this.BeginsOn = beginsOn;
+
             this.FreeTextQuestions = freeTextQuestions;
             this.RadioButtonQuestions = radioButtonQuestions;
             this.CheckBoxQuestions = checkBoxQuestions;
@@ -53,6 +56,8 @@
         public IList<CheckBoxQuestion> CheckBoxQuestions { get; set; }
 
         public IList<QuestionType> QuestionTypes { get; set; }
+
+        public string BeginsOn { get; set; }
 
         public FreeTextQuestion GetFreeTextQuestion(int number)
         {

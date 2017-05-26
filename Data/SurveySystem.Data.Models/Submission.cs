@@ -1,5 +1,6 @@
 ﻿namespace SurveySystem.Data.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -17,6 +18,8 @@
         public int SurveyId { get; set; }
 
         public virtual Respondent Respondent { get; set; }
+
+        public DateTime BeginsOn { get; set; }
 
         public ICollection<RespondentAnswer> Answers { get; set; }
     }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Globalization;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -106,7 +107,11 @@
             }
 
             var questionsMap = this.BuildQuestionMap(survey);
-            var dbSubmission = new Submission { Survey = survey };
+            var dbSubmission = new Submission
+            {
+                Survey = survey,
+                BeginsOn = this.GetTimestamp(userSubmission.BeginsOn)
+            };
             var code = new SubmissionCode { Code = this.GenerateCode() };
 
             Respondent respondent = null;
@@ -255,6 +260,16 @@
             return this.View("InviteResult", true);
         }
 
+        private string GetTimestamp()
+        {
+            return DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
+        }
+
+        private DateTime GetTimestamp(string timestamp)
+        {
+            return DateTime.ParseExact(timestamp, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
+        }
+
         private string FormatSurveyUrl(int id)
         {
             var scheme = this.Request.Url.Scheme;
@@ -318,11 +333,15 @@
         {
             var questionsMap = this.BuildQuestionMap(survey);
 
+            var id = survey.Id;
+            var beginsOn = this.GetTimestamp();
+
             var freeTextQuestions = this.BuildFreeTextQuestions(questionsMap);
             var radioButtonQuestions = this.RadioButtonQuestions(questionsMap);
             var checkBoxQuestions = this.BuildCheckBoxQuestions(questionsMap);
 
-            return new SurveySubmission(survey.Id, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
+
+            return new SurveySubmission(id, beginsOn, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
         }
 
         private Survey GetSurvey(int id)

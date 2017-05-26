@@ -21,6 +21,7 @@
             using (Html.BeginForm("Submit", "Survey", new { id = Model.SurveyId }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.BeginsOn)
 
                 var freeTextQuestions = 0;
                 var checkboxQuestions = 0;
