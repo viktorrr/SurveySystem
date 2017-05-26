@@ -14,6 +14,9 @@
         public SurveySubmission()
         {
             // default ctor, used by the framework to initialize the model
+            this.CheckBoxQuestions = new List<CheckBoxQuestion>();
+            this.FreeTextQuestions = new List<FreeTextQuestion>();
+            this.RadioButtonQuestions = new List<RadioButtonQuestion>();
         }
 
         public SurveySubmission(
