@@ -124,7 +124,8 @@
                     LastName = userSubmission.Respondent.LastName,
                     FacultyNumber = userSubmission.Respondent.FacultyNumber,
                     Email = userSubmission.Respondent.Email,
-                    IP = this.HttpContext.Request.UserHostAddress
+                    IP = this.HttpContext.Request.UserHostAddress,
+                    Submission = dbSubmission
                 };
             }
 
@@ -184,6 +185,7 @@
                 dbQuestion.RespondentAnswers.Add(answer);
             }
 
+            this.db.Respondents.Add(respondent);
             this.db.Submission.Add(dbSubmission);
             this.db.SubmissionCodes.Add(code);
 
@@ -192,6 +194,7 @@
             if (!survey.IsAnonymous)
             {
                 code.SubmissionId = dbSubmission.Id;
+                dbSubmission.RespondentId = respondent.Id;
             }
 
             this.db.SaveChanges();

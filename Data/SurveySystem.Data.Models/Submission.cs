@@ -19,6 +19,8 @@
 
         public virtual Respondent Respondent { get; set; }
 
+        public int? RespondentId { get; set; }
+
         public DateTime BeginsOn { get; set; }
 
         public ICollection<RespondentAnswer> Answers { get; set; }
