@@ -233,6 +233,7 @@
     <Compile Include="Models\Survey\RadioButtonQuestion.cs" />
     <Compile Include="Models\Survey\SingleAnswerQuestion.cs" />
     <Compile Include="Models\Survey\NewSurveyQustionDetails.cs" />
+    <Compile Include="Models\Survey\SurveyDetails.cs" />
     <Compile Include="Models\Survey\SurveyRespondent.cs" />
     <Compile Include="Models\Survey\SurveySubmission.cs" />
     <Compile Include="Models\Survey\ValidateCodeRequest.cs" />

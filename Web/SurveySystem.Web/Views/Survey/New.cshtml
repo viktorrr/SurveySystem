@@ -148,9 +148,9 @@
                         date: null
                     };
 
-                    @if (Model?.BeginsOn != null && Model.BeginsOn > DateTime.MinValue)
+                    @if (Model?.BeganOn != null && Model.BeganOn > DateTime.MinValue)
                     {
-                        @:calendarSettings.date = new Date('@($"{Model.BeginsOn.Year}-{Model.BeginsOn.Month}-{Model.BeginsOn.Day}")');
+                        @:calendarSettings.date = new Date('@($"{Model.BeganOn.Year}-{Model.BeganOn.Month}-{Model.BeganOn.Day}")');
                     }
 
                     // prepare the date pickers

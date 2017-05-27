@@ -110,7 +110,7 @@
             var dbSubmission = new Submission
             {
                 Survey = survey,
-                BeginsOn = this.GetTimestamp(userSubmission.BeginsOn)
+                BeginsOn = this.GetTimestamp(userSubmission.BeganOn)
             };
             var code = new SubmissionCode { Code = this.GenerateCode() };
 
