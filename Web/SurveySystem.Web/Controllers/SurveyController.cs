@@ -207,6 +207,23 @@
         }
 
         [HttpGet]
+        public ActionResult All()
+        {
+            var surveys = this.db.Surveys
+                .OrderBy(x => x.CreatedOn)
+                .Select(x => new BasicSurveyDetails
+                {
+                    Id = x.Id,
+                    IsAnonymous = x.IsAnonymous,
+                    Tittle = x.Title,
+                    CreatedOn = x.CreatedOn
+                })
+                .ToList();
+
+            return this.View(surveys);
+        }
+
+        [HttpGet]
         public ViewResult Details(int id)
         {
             var survey = this.GetSurvey(id);

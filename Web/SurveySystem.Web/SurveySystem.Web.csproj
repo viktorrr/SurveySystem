@@ -953,6 +953,7 @@
     <Content Include="Views\Survey\Validate.cshtml" />
     <Content Include="Views\Survey\ValidateResult.cshtml" />
     <Content Include="Views\Survey\SubmitResult.cshtml" />
+    <Content Include="Views\Survey\All.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="node_modules\moment\moment.d.ts" />
