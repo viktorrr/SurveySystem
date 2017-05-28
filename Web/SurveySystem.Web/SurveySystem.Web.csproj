@@ -225,6 +225,9 @@
     <Compile Include="Models\Manage\ManageLoginsViewModel.cs" />
     <Compile Include="Models\Manage\ConfigureTwoFactorViewModel.cs" />
     <Compile Include="Models\Survey\BaseSurveyQuestion.cs" />
+    <Compile Include="Models\Survey\BasicRespondentDetails.cs" />
+    <Compile Include="Models\Survey\BasicSubmissionDetails.cs" />
+    <Compile Include="Models\Survey\BasicSurveyDetails.cs" />
     <Compile Include="Models\Survey\CheckBoxQuestion.cs" />
     <Compile Include="Models\Survey\EmailInvitation.cs" />
     <Compile Include="Models\Survey\FreeTextQuestion.cs" />
@@ -233,7 +236,6 @@
     <Compile Include="Models\Survey\RadioButtonQuestion.cs" />
     <Compile Include="Models\Survey\SingleAnswerQuestion.cs" />
     <Compile Include="Models\Survey\NewSurveyQustionDetails.cs" />
-    <Compile Include="Models\Survey\SurveyDetails.cs" />
     <Compile Include="Models\Survey\SurveyRespondent.cs" />
     <Compile Include="Models\Survey\SurveySubmission.cs" />
     <Compile Include="Models\Survey\ValidateCodeRequest.cs" />

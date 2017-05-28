@@ -185,7 +185,11 @@
                 dbQuestion.RespondentAnswers.Add(answer);
             }
 
-            this.db.Respondents.Add(respondent);
+            if (respondent != null)
+            {
+                this.db.Respondents.Add(respondent);
+            }
+
             this.db.Submission.Add(dbSubmission);
             this.db.SubmissionCodes.Add(code);
 
@@ -205,7 +209,20 @@
         [HttpGet]
         public ViewResult Details(int id)
         {
-            return this.View(id);
+            var survey = this.GetSurvey(id);
+            if (survey == null)
+            {
+                return this.View((object)null);
+            }
+
+            var surveyDetails = new BasicSurveyDetails
+            {
+                Id = survey.Id,
+                IsAnonymous = survey.IsAnonymous,
+                Submissions = survey.Submissions.OrderBy(x => x.Id).Select(this.CreateSubmissionDetails).ToList()
+            };
+
+            return this.View(surveyDetails);
         }
 
         [HttpGet]
@@ -261,6 +278,23 @@
 
             this.emailService.SendNewReservationEmail(request.EmailList, survey.Title, url);
             return this.View("InviteResult", true);
+        }
+
+       private BasicSubmissionDetails CreateSubmissionDetails(Submission submission)
+        {
+            BasicRespondentDetails respondent = null;
+            if (submission.Respondent != null)
+            {
+                respondent = new BasicRespondentDetails(
+                    submission.Respondent.FirstName,
+                    submission.Respondent.LastName,
+                    submission.Respondent.Email,
+                    submission.Respondent.FacultyNumber,
+                    submission.Respondent.IP);
+            }
+
+           return new BasicSubmissionDetails(
+                submission.BeginsOn, submission.CreatedOn, respondent);
         }
 
         private string GetTimestamp()
@@ -342,7 +376,6 @@
             var freeTextQuestions = this.BuildFreeTextQuestions(questionsMap);
             var radioButtonQuestions = this.RadioButtonQuestions(questionsMap);
             var checkBoxQuestions = this.BuildCheckBoxQuestions(questionsMap);
-
 
             return new SurveySubmission(id, beginsOn, freeTextQuestions, radioButtonQuestions, checkBoxQuestions);
         }
