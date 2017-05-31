@@ -14,7 +14,5 @@
         public DateTime CreatedOn { get; set; }
 
         public IList<BasicSubmissionDetails> Submissions { get; set; }
-
-        public IDictionary<string, Dictionary<string, int>> QuestionMap { get; set; }
     }
 }

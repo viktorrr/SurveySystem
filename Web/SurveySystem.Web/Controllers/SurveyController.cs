@@ -232,6 +232,28 @@
                 return this.View((object)null);
             }
 
+            var submissions = survey.Submissions.OrderBy(x => x.Id).Select(this.CreateSubmissionDetails).ToList();
+
+            var surveyDetails = new BasicSurveyDetails
+            {
+                Id = survey.Id,
+                Tittle = survey.Title,
+                IsAnonymous = survey.IsAnonymous,
+                Submissions = submissions
+            };
+
+            return this.View(surveyDetails);
+        }
+
+        [HttpGet]
+        public JsonResult GetQuestionMap(int id)
+        {
+            var survey = this.GetSurvey(id);
+            if (survey == null)
+            {
+                return new JsonResult();
+            }
+
             var questionMap =
                 survey.Questions.Where(x => x.QuestionType != QuestionType.FreeText)
                     .ToDictionary(
@@ -241,18 +263,7 @@
                                 answer => answer.Text,
                                 answer => this.db.RespondentAnswers.Count(respondentAnswer => respondentAnswer.QuestionAnswer.Id == answer.Id)));
 
-            var submissions = survey.Submissions.OrderBy(x => x.Id).Select(this.CreateSubmissionDetails).ToList();
-
-            var surveyDetails = new BasicSurveyDetails
-            {
-                Id = survey.Id,
-                Tittle = survey.Title,
-                IsAnonymous = survey.IsAnonymous,
-                Submissions = submissions,
-                QuestionMap = questionMap
-            };
-
-            return this.View(surveyDetails);
+            return this.Json(questionMap, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

@@ -1,5 +1,4 @@
-﻿@using SurveySystem.Web.Util
-@model SurveySystem.Web.Models.Survey.BasicSurveyDetails
+﻿@model SurveySystem.Web.Models.Survey.BasicSurveyDetails
 
 @{
     ViewBag.Title = "title";
@@ -74,140 +73,150 @@
         }
     </div>
 </div>
-@{
-    var questionCounter = 0;
-    foreach (var questionMap in Model.QuestionMap)
-    {
-        <div class="row">
-            <h2 class="text-center">@questionMap.Key</h2>
-
-            <div class="col-md-6">
-                <canvas id="pie-chart-@(questionCounter)" width="400" height="400"></canvas>
-            </div>
-            <div class="col-md-6">
-                <canvas id="bar-chart-@(questionCounter)" width="400" height="400"></canvas>
-            </div>
-
-            <br />
-        </div>
-        questionCounter++;
-    }
-}
 
 @section scripts {
     <script>
-        var backgroundColors = [
+        (function() {
+            var backgroundColors = [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
             'rgba(255, 206, 86, 0.2)',
             'rgba(75, 192, 192, 0.2)',
             'rgba(153, 102, 255, 0.2)',
             'rgba(255, 159, 64, 0.2)'
-        ];
-        var borderColors = [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-        ];
+            ];
+            var borderColors = [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ];
 
-        var ids = [];
-        var answers = [];
-        var values = [];
+            $(document).ready(function () {
+                $.get('@Url.Action("GetQuestionMap", new { id = Model.Id })', function (data) {
+                    var counter = 0;
+                    for (var key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            var $row = $("<div>").addClass("row");
 
-        @{
-            questionCounter = 0;
-        }
-        @foreach (var questionMap in Model.QuestionMap)
-        {
-            @:var answers = @Html.Raw(Html.GeneratePieLabels(questionMap.Value));
-            @:var values = @Html.GeneratePieValues(questionMap.Value);
+                            $row.append(
+                                $("<h2>").addClass("text-center").html(key));
 
-            @:pie(@questionCounter, answers, values.slice());
-            @:bar(@questionCounter, answers, values.slice(), '@questionMap.Key');
+                            $row.append(
+                                $('<div>')
+                                .addClass("col-md-6")
+                                .html(createCanvas('pie-chart-' + counter)));
 
-            questionCounter++;
-        }
+                            $row.append(
+                                $('<div>')
+                                .addClass("col-md-6")
+                                .html(createCanvas('bar-chart-' + counter)));
 
-        function bar(id, answers, values, title) {
-            var bgColor = [];
-            var borderColor = [];
-            var ctx = document.getElementById("bar-chart-" + id).getContext('2d');
 
-            for (var i = 0; i < answers.length / backgroundColors.length; i += 1) {
-                bgColor = bgColor.concat(backgroundColors);
-                borderColor = borderColor.concat(borderColors);
+                            $($('.container')[0]).append($row);
+
+                            var questionInfo = normalize(data[key]);
+
+                            bar(counter, questionInfo.answers, questionInfo.responses);
+                            pie(counter, questionInfo.answers, questionInfo.responses);
+
+                            counter++;
+                        }
+                    }
+
+                    function createCanvas(id) {
+                        return $("<canvas>")
+                            .attr('id', id)
+                            .attr('width', 400)
+                            .attr('height', 400);
+                    }
+
+                    function normalize(questionInfo) {
+                        var answersText = [];
+                        var answersCount = [];
+                        for (var key in questionInfo) {
+                            if (questionInfo.hasOwnProperty(key)) {
+                                answersText.push(key);
+                                answersCount.push(questionInfo[key]);
+                            }
+                        }
+
+                        return {
+                            answers: answersText,
+                            responses: answersCount
+                        }
+                    }
+
+                });
+            });
+
+            function bar(id, answers, values) {
+
+                var bgColor = [];
+                var borderColor = [];
+                var ctx = document.getElementById("bar-chart-" + id).getContext('2d');
+
+                for (var i = 0; i < answers.length / backgroundColors.length; i += 1) {
+                    bgColor = bgColor.concat(backgroundColors);
+                    borderColor = borderColor.concat(borderColors);
+                }
+
+                var chartOptions = {
+                    responsive: true,
+                    type: 'bar',
+                    data: {
+                        labels: answers,
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: bgColor,
+                                borderColor: borderColors,
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                };
+
+                return new Chart(ctx, chartOptions);
             }
 
-            console.log(id);
-            console.log(answers);
-            console.log(values);
+            function pie(id, answers, values) {
 
-            var chartOptions = {
-                responsive : true,
-                type: 'bar',
-                data: {
-                    labels: answers,
-                    datasets: [
-                        {
-                            data: values,
-                            backgroundColor: bgColor,
-                            borderColor: borderColors,
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [
+                var bgColor = [];
+                var borderColor = [];
+                var ctx = document.getElementById("pie-chart-" + id).getContext('2d');
+
+                for (var i = 0; i < answers.length / backgroundColors.length; i += 1) {
+                    bgColor = bgColor.concat(backgroundColors);
+                    borderColor = borderColor.concat(borderColors);
+                }
+
+                var chartOptions = {
+                    responsive: true,
+                    type: 'pie',
+                    data: {
+                        labels: answers,
+                        datasets: [
                             {
-                                ticks: {
-                                    beginAtZero: true
-                                }
+                                data: values,
+                                backgroundColor: bgColor,
+                                borderColor: borderColors,
+                                borderWidth: 1
                             }
                         ]
                     }
-                }
-            };
 
-            console.log(JSON.stringify(chartOptions));
+                };
 
-            return new Chart(ctx, chartOptions);
-        }
-
-        function pie(id, answers, values) {
-            var bgColor = [];
-            var borderColor = [];
-            var ctx = document.getElementById("pie-chart-" + id).getContext('2d');
-
-            for (var i = 0; i < answers.length / backgroundColors.length; i += 1) {
-                bgColor = bgColor.concat(backgroundColors);
-                borderColor = borderColor.concat(borderColors);
+                return new Chart(ctx, chartOptions);
             }
-
-            var chartOptions = {
-                responsive : true,
-                type: 'pie',
-                data: {
-                    labels: answers,
-                    datasets: [
-                        {
-                            data: values,
-                            backgroundColor: bgColor,
-                            borderColor: borderColors,
-                            borderWidth: 1
-                        }
-                    ]
-                }
-
-            };
-
-            return new Chart(ctx, chartOptions);
-        }
+        })();
     </script>
 }

@@ -1,16 +1,11 @@
 ﻿namespace SurveySystem.Web.Util
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Web.Mvc;
 
-    using Newtonsoft.Json;
+    using System.Web.Mvc;
 
     using SurveySystem.Data.Models;
     using SurveySystem.Web.Models.Survey;
-
-    using WebGrease.Css.Extensions;
 
     public static class HtmlHelperExtensions
     {
@@ -51,16 +46,6 @@
             }
 
             return result;
-        }
-
-        public static string GeneratePieLabels(this HtmlHelper helper, IDictionary<string, int> values)
-        {
-            return JsonConvert.SerializeObject(values.OrderBy(x => x.Key).Select(x => x.Key));
-        }
-
-        public static string GeneratePieValues(this HtmlHelper helper, IDictionary<string, int> values)
-        {
-            return JsonConvert.SerializeObject(values.OrderBy(x => x.Key).Select(x => x.Value));
         }
 
         public static string FormatQuestion(this HtmlHelper helper, int questionNumber, BaseSurveyQuestion question)
