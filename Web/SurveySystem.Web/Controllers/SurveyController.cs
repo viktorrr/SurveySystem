@@ -9,11 +9,13 @@
     using System.Text;
     using System.Web.Mvc;
 
+    using SurveySystem.Common;
     using SurveySystem.Data;
     using SurveySystem.Data.Models;
     using SurveySystem.Services.Web;
     using SurveySystem.Web.Models.Survey;
 
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     public class SurveyController : BaseController
     {
         private const int RandomStringLength = 15; // 15 because reasons...
@@ -29,6 +31,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ViewResult New(NewSurveyRequest request)
         {
             if (!this.ModelState.IsValid)
@@ -78,6 +81,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ViewResult Submit(int id = 1)
         {
             var survey = this.GetSurvey(id);
@@ -96,6 +100,8 @@
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ViewResult Submit(int id, SurveySubmission userSubmission)
         {
             var survey = this.GetSurvey(id);
