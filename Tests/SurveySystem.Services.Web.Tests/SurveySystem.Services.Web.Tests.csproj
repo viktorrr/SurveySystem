@@ -50,9 +50,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\SurveySystem.Data.Common\SurveySystem.Data.Common.csproj">
+      <Project>{edfe3c57-ef5b-4636-9ecc-d0baca6b6379}</Project>
+      <Name>SurveySystem.Data.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Data\SurveySystem.Data.Models\SurveySystem.Data.Models.csproj">
+      <Project>{048df115-fad9-4bd4-9ba0-d99dfd32a2b2}</Project>
+      <Name>SurveySystem.Data.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Data\SurveySystem.Data\SurveySystem.Data.csproj">
+      <Project>{7c950cdc-9587-4b65-a204-988efed17948}</Project>
+      <Name>SurveySystem.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Services\SurveySystem.Services.Web\SurveySystem.Services.Web.csproj">
       <Project>{deab17a2-58c1-448c-8a66-d49c3af7fc6c}</Project>
       <Name>SurveySystem.Services.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Web\SurveySystem.Web\SurveySystem.Web.csproj">
+      <Project>{67cc40ff-4933-4f83-810e-357e6bc8b973}</Project>
+      <Name>SurveySystem.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,7 @@
   "homepage": "https://github.com/viktorrr/SurveySystem#readme",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "chart.js": "^2.6.0",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "jquery": "^3.2.1",
     "jquery-validation-unobtrusive": "^3.2.6",

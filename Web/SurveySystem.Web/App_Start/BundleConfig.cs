@@ -33,6 +33,10 @@
                 .Include(
                     FormatNodeModulePath("moment/min/moment-with-locales.min.js"),
                     FormatNodeModulePath("eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/chartjs")
+                .Include(FormatNodeModulePath("chart.js/dist/Chart.bundle.min.js")));
         }
 
         private static void RegisterStyles(BundleCollection bundles)

@@ -232,11 +232,24 @@
                 return this.View((object)null);
             }
 
+            var questionMap =
+                survey.Questions.Where(x => x.QuestionType != QuestionType.FreeText)
+                    .ToDictionary(
+                        question => question.Text,
+                        question =>
+                            question.QuestionAnswers.ToDictionary(
+                                answer => answer.Text,
+                                answer => this.db.RespondentAnswers.Count(respondentAnswer => respondentAnswer.QuestionAnswer.Id == answer.Id)));
+
+            var submissions = survey.Submissions.OrderBy(x => x.Id).Select(this.CreateSubmissionDetails).ToList();
+
             var surveyDetails = new BasicSurveyDetails
             {
                 Id = survey.Id,
+                Tittle = survey.Title,
                 IsAnonymous = survey.IsAnonymous,
-                Submissions = survey.Submissions.OrderBy(x => x.Id).Select(this.CreateSubmissionDetails).ToList()
+                Submissions = submissions,
+                QuestionMap = questionMap
             };
 
             return this.View(surveyDetails);
