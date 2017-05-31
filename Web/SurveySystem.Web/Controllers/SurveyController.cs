@@ -9,6 +9,8 @@
     using System.Text;
     using System.Web.Mvc;
 
+    using Newtonsoft.Json;
+
     using SurveySystem.Common;
     using SurveySystem.Data;
     using SurveySystem.Data.Models;
@@ -259,16 +261,24 @@
                 return new JsonResult();
             }
 
-            var questionMap =
-                survey.Questions.Where(x => x.QuestionType != QuestionType.FreeText)
-                    .ToDictionary(
-                        question => question.Text,
-                        question =>
-                            question.QuestionAnswers.ToDictionary(
-                                answer => answer.Text,
-                                answer => this.db.RespondentAnswers.Count(respondentAnswer => respondentAnswer.QuestionAnswer.Id == answer.Id)));
+            var questionMap = this.CreateQuestionMap(survey);
 
             return this.Json(questionMap, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult Serialize(int id)
+        {
+            var survey = this.GetSurvey(id);
+            if (survey == null)
+            {
+                return new JsonResult();
+            }
+
+            var questionMap = this.CreateQuestionMap(survey);
+            var json = JsonConvert.SerializeObject(questionMap);
+
+            return this.File(Encoding.UTF8.GetBytes(json), "application/json", $"survey-{id}.json");
         }
 
         [HttpGet]
@@ -307,7 +317,7 @@
             }
 
             var emails = request.EmailList
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries );
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (emails.Length == 0)
             {
@@ -326,7 +336,18 @@
             return this.View("InviteResult", true);
         }
 
-       private BasicSubmissionDetails CreateSubmissionDetails(Submission submission)
+        private Dictionary<string, Dictionary<string, int>> CreateQuestionMap(Survey survey)
+        {
+            return survey.Questions.Where(x => x.QuestionType != QuestionType.FreeText)
+                    .ToDictionary(
+                        question => question.Text,
+                        question =>
+                            question.QuestionAnswers.ToDictionary(
+                                answer => answer.Text,
+                                answer => this.db.RespondentAnswers.Count(respondentAnswer => respondentAnswer.QuestionAnswer.Id == answer.Id)));
+        }
+
+        private BasicSubmissionDetails CreateSubmissionDetails(Submission submission)
         {
             BasicRespondentDetails respondent = null;
             if (submission.Respondent != null)
@@ -339,8 +360,8 @@
                     submission.Respondent.IP);
             }
 
-           return new BasicSubmissionDetails(
-                submission.BeginsOn, submission.CreatedOn, respondent);
+            return new BasicSubmissionDetails(
+                 submission.BeginsOn, submission.CreatedOn, respondent);
         }
 
         private string GetTimestamp()

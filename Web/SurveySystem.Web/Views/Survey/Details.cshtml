@@ -16,9 +16,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Административни дейности</div>
                     <ul class="list-group">
-                        <li class="list-group-item">@Html.ActionLink("Попълни анкетата", "Submit", new { id = Model })</li>
-                        <li class="list-group-item">@Html.ActionLink("Изпрати покана", "Invite", new { id = Model })</li>
-                        <li class="list-group-item">@Html.ActionLink("Провери код", "Validate", new { id = Model })</li>
+                        <li class="list-group-item">@Html.ActionLink("Попълни анкетата", "Submit", new { id = Model.Id })</li>
+                        <li class="list-group-item">@Html.ActionLink("Изпрати покана", "Invite", new { id = Model.Id })</li>
+                        <li class="list-group-item">@Html.ActionLink("Провери код", "Validate", new { id = Model.Id })</li>
+                        <li class="list-group-item">@Html.ActionLink("Свали json", "Serialize", new { id = Model.Id })</li>
                     </ul>
                 </div>
             }
