@@ -32,7 +32,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ViewResult New(NewSurveyRequest request)
+        public ActionResult New(NewSurveyRequest request)
         {
             if (!this.ModelState.IsValid)
             {
@@ -73,11 +73,10 @@
                 return this.View(request);
             }
 
-            // TODO: redirect to another page!
             this.db.Surveys.Add(survey);
             this.db.SaveChanges();
 
-            return this.View();
+            return this.RedirectToAction("Details", new { id = survey.Id });
         }
 
         [HttpGet]
