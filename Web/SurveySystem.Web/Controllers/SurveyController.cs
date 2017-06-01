@@ -200,7 +200,7 @@
                 this.db.Respondents.Add(respondent);
             }
 
-            this.db.Submission.Add(dbSubmission);
+            this.db.Submissions.Add(dbSubmission);
             this.db.SubmissionCodes.Add(code);
 
             this.db.SaveChanges();
@@ -272,7 +272,7 @@
         [HttpGet]
         public ActionResult DownloadSubmission(int id)
         {
-            var dbSubmission = this.db.Submission.FirstOrDefault(x => x.Id == id);
+            var dbSubmission = this.db.Submissions.FirstOrDefault(x => x.Id == id);
             if (dbSubmission == null)
             {
                 return new JsonResult();
@@ -357,7 +357,7 @@
         [HttpGet]
         public ActionResult Submission(int id)
         {
-            var submission = this.db.Submission.FirstOrDefault(x => x.Id == id);
+            var submission = this.db.Submissions.FirstOrDefault(x => x.Id == id);
             if (submission == null)
             {
                 return this.View((object)null);
@@ -403,7 +403,7 @@
                 })
                 .ToList();
 
-            var submission = this.db.Submission.First(x => x.Id == id);
+            var submission = this.db.Submissions.First(x => x.Id == id);
             var details = this.CreateSubmissionDetails(submission);
 
             details.CheckBoxQuestions = checkboxQuestions;

@@ -28,7 +28,7 @@
 
         public IDbSet<Respondent> Respondents { get; set; }
 
-        public IDbSet<Submission> Submission { get; set; }
+        public IDbSet<Submission> Submissions { get; set; }
 
         public IDbSet<SubmissionCode> SubmissionCodes { get; set; }
 
