@@ -19,7 +19,7 @@
                         <li class="list-group-item">@Html.ActionLink("Попълни анкетата", "Submit", new { id = Model.Id })</li>
                         <li class="list-group-item">@Html.ActionLink("Изпрати покана", "Invite", new { id = Model.Id })</li>
                         <li class="list-group-item">@Html.ActionLink("Провери код", "Validate", new { id = Model.Id })</li>
-                        <li class="list-group-item">@Html.ActionLink("Свали json", "Serialize", new { id = Model.Id })</li>
+                        <li class="list-group-item">@Html.ActionLink("Свали JSON", "Serialize", new { id = Model.Id })</li>
                     </ul>
                 </div>
             }
@@ -40,6 +40,8 @@
                         <th>Факултетен номер</th>
                         <th>IP</th>
                         <th>Емайл</th>
+                        <th>Преглед</th>
+                        <th>Свали JSON</th>
                         <th>Начало</th>
                         <th>Край</th>
                     </tr>
@@ -65,6 +67,8 @@
                                 <td>@Model.Submissions[i].Respondent.Email</td>
                                 <td>@Model.Submissions[i].Respondent.IP</td>
                             }
+                            <td>@Html.ActionLink("Преглед", "Submission", new { id = Model.Submissions[i].Id })</td>
+                            <td>@Html.ActionLink("Свали JSON", "DownloadSubmission", new { id = Model.Submissions[i].Id })</td>
                             <td>@Model.Submissions[i].BeganOn</td>
                             <td>@Model.Submissions[i].CompletedOn</td>
                         </tr>

@@ -151,6 +151,7 @@
                         var answer = new RespondentAnswer
                         {
                             QuestionAnswer = answers[j],
+                            Question = dbQuestion,
                             Submission = dbSubmission,
                             Respondent = respondent
                         };
@@ -171,6 +172,7 @@
                 var answer = new RespondentAnswer
                 {
                     QuestionAnswer = dbAnswer,
+                    Question = dbQuestion,
                     Submission = dbSubmission,
                     Respondent = respondent
                 };
@@ -187,7 +189,8 @@
                 {
                     Text = answeredQuestion.Answer,
                     Submission = dbSubmission,
-                    Respondent = respondent
+                    Respondent = respondent,
+                    Question = dbQuestion
                 };
                 dbQuestion.RespondentAnswers.Add(answer);
             }
@@ -267,6 +270,21 @@
         }
 
         [HttpGet]
+        public ActionResult DownloadSubmission(int id)
+        {
+            var dbSubmission = this.db.Submission.FirstOrDefault(x => x.Id == id);
+            if (dbSubmission == null)
+            {
+                return new JsonResult();
+            }
+
+            var details = this.CreateSubmissionDetails(id);
+            var json = JsonConvert.SerializeObject(details);
+
+            return this.File(Encoding.UTF8.GetBytes(json), "application/json", $"submission-{id}.json");
+        }
+
+        [HttpGet]
         public ActionResult Serialize(int id)
         {
             var survey = this.GetSurvey(id);
@@ -336,6 +354,65 @@
             return this.View("InviteResult", true);
         }
 
+        [HttpGet]
+        public ActionResult Submission(int id)
+        {
+            var submission = this.db.Submission.FirstOrDefault(x => x.Id == id);
+            if (submission == null)
+            {
+                return this.View((object)null);
+            }
+
+            var details = this.CreateSubmissionDetails(submission);
+            return this.View(details);
+        }
+
+        private BasicSubmissionDetails CreateSubmissionDetails(int id)
+        {
+            var freeTextQuestions = this.db.RespondentAnswers
+                .Where(x => x.Submission.Id == id && x.Text != null)
+                .Select(x => new FreeTextQuestion
+                {
+                    Text = x.Question.Text,
+                    Answer = x.Text,
+                    SequentialNumber = x.Question.SequenceNumber
+                })
+                .ToList();
+
+            var checkboxQuestions = this.db.RespondentAnswers
+                .Where(x => x.Submission.Id == id && x.Question.QuestionType == QuestionType.Checkbox)
+                .Include(x => x.QuestionAnswer)
+                .GroupBy(x => x.Question, x => x)
+                .ToDictionary(x => x.Key, x => x.ToList())
+                .Select(x => new CheckBoxQuestion
+                {
+                    Text = x.Key.Text,
+                    SequentialNumber = x.Key.SequenceNumber,
+                    Answers = x.Value.Select(q => q.QuestionAnswer.Text).ToList()
+                })
+                .ToList();
+
+            var radioButtonQuestions = this.db.RespondentAnswers
+                .Where(x => x.Submission.Id == id && x.Question.QuestionType == QuestionType.RadioButton)
+                .Include(x => x.QuestionAnswer)
+                .Select(x => new RadioButtonQuestion
+                {
+                    SequentialNumber = x.Question.SequenceNumber,
+                    Answer = x.QuestionAnswer.Text,
+                    Text = x.Question.Text
+                })
+                .ToList();
+
+            var submission = this.db.Submission.First(x => x.Id == id);
+            var details = this.CreateSubmissionDetails(submission);
+
+            details.CheckBoxQuestions = checkboxQuestions;
+            details.RadioButtonQuestions = radioButtonQuestions;
+            details.FreeTextQuestions = freeTextQuestions;
+
+            return details;
+        }
+
         private Dictionary<string, Dictionary<string, int>> CreateQuestionMap(Survey survey)
         {
             return survey.Questions.Where(x => x.QuestionType != QuestionType.FreeText)
@@ -344,6 +421,7 @@
                         question =>
                             question.QuestionAnswers.ToDictionary(
                                 answer => answer.Text,
+                                // TODO: fix this..
                                 answer => this.db.RespondentAnswers.Count(respondentAnswer => respondentAnswer.QuestionAnswer.Id == answer.Id)));
         }
 
@@ -361,7 +439,7 @@
             }
 
             return new BasicSubmissionDetails(
-                 submission.BeginsOn, submission.CreatedOn, respondent);
+                 submission.BeginsOn, submission.CreatedOn, respondent, submission.Id);
         }
 
         private string GetTimestamp()

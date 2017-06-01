@@ -4,11 +4,12 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Newtonsoft.Json;
+
     using SurveySystem.Data.Models;
 
     public class BasicSubmissionDetails
     {
-
         private readonly Dictionary<int, FreeTextQuestion> freeTextQuestionsCache;
         private readonly Dictionary<int, RadioButtonQuestion> radioButtonQuestionsCache;
         private readonly Dictionary<int, CheckBoxQuestion> checkBoxQuestionsCache;
@@ -16,11 +17,13 @@
         public BasicSubmissionDetails(
             DateTime beganOn,
             DateTime completedOn,
-            BasicRespondentDetails respondent)
+            BasicRespondentDetails respondent,
+            int id)
         {
             this.BeganOn = beganOn;
             this.CompletedOn = completedOn;
             this.Respondent = respondent;
+            this.Id = id;
         }
 
         public BasicSubmissionDetails(
@@ -44,6 +47,8 @@
             this.QuestionTypes = surveyQuestions.OrderBy(x => x.SequentialNumber).Select(x => x.QuestionType).ToList();
         }
 
+        public int Id { get; set; }
+
         public DateTime BeganOn { get; set; }
 
         public DateTime CompletedOn { get; set; }
@@ -56,6 +61,7 @@
 
         public IList<CheckBoxQuestion> CheckBoxQuestions { get; set; }
 
+        [JsonIgnore]
         public IList<QuestionType> QuestionTypes { get; set; }
 
         public FreeTextQuestion GetFreeTextQuestion(int number)
