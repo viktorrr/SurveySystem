@@ -1,4 +1,159 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    Layout = null;
 }
-<h1>Welcome</h1>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - SurveySystem</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/dt-picker")
+</head>
+<body>
+    <nav id="home-nav" class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapser"
+                        aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Система за резервации", "Index", "Home", new { area = string.Empty }, new { @class = "navbar-brand" })
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapser">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Начало", "Index", "Home", new { area = string.Empty }, null)</li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Анкети
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li>@Html.ActionLink("Преглед на всички анкети", "All", "Survey")</li>
+                            }
+                            <li>@Html.ActionLink("Създаване на нова анкета", "New", "Survey")</li>
+                        </ul>
+
+                    </li>
+                </ul>
+
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+
+            <div class="item active">
+                <img src="~/Content/Images/slider1.png">
+            </div>
+
+            <div class="item">
+                <img src="~/Content/Images/slider2.png">
+            </div>
+
+            <div class="item">
+                <img src="~/Content/Images/slider3.png">
+            </div>
+
+            <div class="item">
+                <img src="~/Content/Images/slider4.png">
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="title-container" class="page-header text-center">
+                    <h1>Система за анкети в НБУ</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="content-boxes">
+                    <span class="glyphicon glyphicon-floppy-save"></span>
+                    <h3>Направи анкета бързо и лесно</h3>
+                    <p>Нашият прост и изчистен дизайн ти позволява изключително лесно да създадаш анкета, с която да направиш своето проучване.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="content-boxes">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                    <h3>Покани анкетиращи</h3>
+                    <p>След като създадеш своята анкета, не е нужно да изпращаш емайли един по един. Просто трябва да ни дадеш списък с хора, които трябва да попълнят анкетата и ние ще им пишем!</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="content-boxes">
+                    <span class="glyphicon glyphicon-signal"></span>
+                    <h3>Генерирай диаграми на момента</h3>
+                    <p>Нашата система позволява автоматично ти генерира кръгова и стълбовидна диаграма за всеки един въпрос от твоята анкета.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="content-boxes">
+                    <span class="glyphicon glyphicon-th"></span>
+                    <h3>Една система, много устройства</h3>
+                    <p>Дизайн, който е не само красив, но е и адаптивен - позволява работа през телефон, таблет, лаптоп или настолен компютър.</p>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div id="grey-container" class="container-fluid">
+        <div id="bg-color-grey">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-3">
+                    <img src="~/Content/Images/laptop-tablet-phone-pc1.png" class="img-responsive">
+                </div>
+                <div class="col-md-4">
+                    <br />
+                    <div>
+                        <h2 id="trust-carl">Защо да ни се доверите?</h2>
+                        <ul>
+                            <li><span class="glyphicon glyphicon-ok green-ok"></span>Бърза и лесна работа със системата</li>
+                            <li><span class="glyphicon glyphicon-ok green-ok"></span>Сигурност на данните - съхранени в база данни</li>
+                            <li><span class="glyphicon glyphicon-ok green-ok"></span>Генериране на анонимни или потребителски анкети</li>
+                            <li><span class="glyphicon glyphicon-ok green-ok"></span>Генериране на уникален код след попълване на анкетата, който може да се провери след това</li>
+                            <li><span class="glyphicon glyphicon-ok green-ok"></span>Генериране на диаграми за всеки въпрос</li>
+                            <li><span class="glyphicon glyphicon-ok green-ok"></span>Лесен начин за уведомяване на дадена аудитория за анкетата</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.UtcNow.Year - SurveySystem</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>
+
