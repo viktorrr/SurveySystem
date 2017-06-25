@@ -363,8 +363,32 @@
                 return this.View((object)null);
             }
 
-            var details = this.CreateSubmissionDetails(submission);
+            var details = this.CreateSubmissionDetails(submission.Id);
             return this.View(details);
+        }
+
+        private BasicSubmissionDetails CreateSubmissionDetails(Submission submission)
+        {
+            var respondent = this.GetRespondent(submission);
+
+            return new BasicSubmissionDetails(
+                 submission.BeginsOn, submission.CreatedOn, respondent, submission.Id);
+        }
+
+        private BasicRespondentDetails GetRespondent(Submission submission)
+        {
+            BasicRespondentDetails respondent = null;
+            if (submission.Respondent != null)
+            {
+                respondent = new BasicRespondentDetails(
+                    submission.Respondent.FirstName,
+                    submission.Respondent.LastName,
+                    submission.Respondent.Email,
+                    submission.Respondent.FacultyNumber,
+                    submission.Respondent.IP);
+            }
+
+            return respondent;
         }
 
         private BasicSubmissionDetails CreateSubmissionDetails(int id)
@@ -404,11 +428,13 @@
                 .ToList();
 
             var submission = this.db.Submissions.First(x => x.Id == id);
-            var details = this.CreateSubmissionDetails(submission);
-
-            details.CheckBoxQuestions = checkboxQuestions;
-            details.RadioButtonQuestions = radioButtonQuestions;
-            details.FreeTextQuestions = freeTextQuestions;
+            var details = new BasicSubmissionDetails(freeTextQuestions, radioButtonQuestions, checkboxQuestions)
+            {
+                Respondent = this.GetRespondent(submission),
+                BeganOn = submission.BeginsOn,
+                Id = submission.Id,
+                CompletedOn = submission.CreatedOn
+            };
 
             return details;
         }
@@ -423,23 +449,6 @@
                                 answer => answer.Text,
                                 // TODO: fix this..
                                 answer => this.db.RespondentAnswers.Count(respondentAnswer => respondentAnswer.QuestionAnswer.Id == answer.Id)));
-        }
-
-        private BasicSubmissionDetails CreateSubmissionDetails(Submission submission)
-        {
-            BasicRespondentDetails respondent = null;
-            if (submission.Respondent != null)
-            {
-                respondent = new BasicRespondentDetails(
-                    submission.Respondent.FirstName,
-                    submission.Respondent.LastName,
-                    submission.Respondent.Email,
-                    submission.Respondent.FacultyNumber,
-                    submission.Respondent.IP);
-            }
-
-            return new BasicSubmissionDetails(
-                 submission.BeginsOn, submission.CreatedOn, respondent, submission.Id);
         }
 
         private string GetTimestamp()
